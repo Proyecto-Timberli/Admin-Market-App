@@ -1,14 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Prueba from './components/Prueba'
-export default function App() {
+
+export default function Prueba() {
   return (
     <View style={styles.container}>
-      <Prueba/>
-      <Text>Hello world</Text>
+      <Text>Hello world2ssss</Text>
       <StatusBar style="auto" />
     </View>
-    
   );
 }
 
