@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Alert,
   Button,
+  FlatList,
   StyleSheet,
   Text,
   TextInput,
@@ -43,21 +44,21 @@ const NuevaCategoria = () => {
   return (
     <View style={estilos.container}>
       <Text>Categorias Actuales</Text>
-      <View style={estilos.listado}>
-        {array.map((e) => {
-          return (
-            <View key={e}>
-              <TouchableOpacity onPress={() => setCategoria(e)}>
-                <Text
-                  style={categoria === e ? estilos.textoActivo : estilos.texto}
-                >
-                  {e}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          );
-        })}
-      </View>
+      <FlatList
+        style={estilos.listado}
+        data={array}
+        renderItem={(e) => (
+          <View key={e}>
+            <TouchableOpacity onPress={() => setCategoria(e)}>
+              <Text
+                style={categoria === e ? estilos.textoActivo : estilos.texto}
+              >
+                {e}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      ></FlatList>
       {categoria ? (
         <View>
           <TouchableOpacity
@@ -108,7 +109,7 @@ const estilos = StyleSheet.create({
     padding: 10,
   },
   cajaBotones: {
-    display: "flex",
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
   },
