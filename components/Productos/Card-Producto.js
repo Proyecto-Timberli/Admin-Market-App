@@ -13,11 +13,13 @@ const CardProducto = ({ nombre, categoria, precio }) => {
 
 let estilo = StyleSheet.create({
   lista: {
+    flex: 1,
     backgroundColor: "#F8E9E9",
     margin: 5,
-    displey: "flex",
+    zIndex: 1,
+    elevation: 1,
     flexDirection: "row",
-    width: "95%",
+
     height: 40,
     alignItems: "center",
     padding: 10,
