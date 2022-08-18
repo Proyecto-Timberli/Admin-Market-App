@@ -1,22 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Prueba from './components/Menu-App'
+import Modificar from './components/Productos/Modificar-Precios.js'
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Prueba/>
-      <Text>Hello world</Text>
-      <StatusBar style="auto" />
-    </View>
-    
+  return (    
+    // <Modificar/>   
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
