@@ -1,10 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Modificar from './components/Productos/Modificar-Precios.js'
+
+import { StyleSheet, Text, View } from "react-native";
+import NavBar from "./components/Productos/NavBar";
 export default function App() {
-  return (    
-    // <Modificar/>   
+  return (
+    <View>
+      <NavBar />
+    </View>
   );
 }
 
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
