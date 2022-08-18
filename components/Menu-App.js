@@ -1,13 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import NuevaCategoria from "./Productos/Nueva-Categoria";
 
 export default function Prueba() {
   return (
-    <View style={styles.container}>
-      <Text>Hello world2ssss</Text>
-      <StatusBar style="auto" />
-    </View>
+
   );
 }
 
