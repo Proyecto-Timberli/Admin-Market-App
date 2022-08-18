@@ -1,3 +1,4 @@
+
 import { StyleSheet, Text, View } from "react-native";
 import NavBar from "./components/Productos/NavBar";
 export default function App() {
