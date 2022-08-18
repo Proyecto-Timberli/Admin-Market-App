@@ -45,22 +45,25 @@ const NuevaCategoria = () => {
     <View style={estilos.container}>
       <Text>Categorias Actuales</Text>
       <FlatList
-        style={estilos.listado}
+        // style={estilos.listado}
         data={array}
-        renderItem={(e) => (
-          <View key={e}>
-            <TouchableOpacity onPress={() => setCategoria(e)}>
-              <Text
-                style={categoria === e ? estilos.textoActivo : estilos.texto}
-              >
-                {e}
-              </Text>
+        keyExtractor={(item) => item}
+        // style={{ borderWidth: 2 }}
+        renderItem={({ item }) => (
+          <View>
+            <TouchableOpacity
+              style={
+                categoria === item ? estilos.listadoActivo : estilos.listado
+              }
+              onPress={() => setCategoria(item)}
+            >
+              <Text style={estilos.texto}>{item}</Text>
             </TouchableOpacity>
           </View>
         )}
-      ></FlatList>
+      />
       {categoria ? (
-        <View>
+        <View style={{ alignItems: "center" }}>
           <TouchableOpacity
             style={estilos.botonEliminar}
             onPress={() => eliminarCategoria(categoria)}
@@ -72,7 +75,7 @@ const NuevaCategoria = () => {
       <View>
         <TextInput
           style={estilos.inputTexto}
-          placeholder="Escriba su nueva categoria aquí"
+          placeholder="Escriba su nueva categoria aquí..."
           onChangeText={(e) => setText(e)}
           value={text}
         />
@@ -93,35 +96,65 @@ const NuevaCategoria = () => {
 };
 
 const estilos = StyleSheet.create({
-  container: { display: "flex", alignItems: "center" },
-  listado: {
-    borderWidth: 2,
-    borderRadius: 50,
-    width: 120,
-    backgroundColor: "grey",
+  container: {
+    height: "100%",
+    display: "flex",
+    marginHorizontal: 30,
+    alignContent: "space-around",
   },
-  texto: { textAlign: "center" },
-  textoActivo: { textAlign: "center", backgroundColor: "green" },
+  listado: {
+    margin: 1,
+    padding: 3,
+    backgroundColor: "#DBD7D7",
+    paddingVertical: 10,
+  },
+  listadoActivo: {
+    margin: 1,
+
+    padding: 3,
+    backgroundColor: "#8CEF3E",
+    paddingVertical: 10,
+  },
+  texto: { fontSize: 18, color: "black", textAlign: "center" },
+
   inputTexto: {
+    fontSize: 18,
     height: "35%",
-    borderWidth: 1,
+
+    backgroundColor: "#DBD7D7",
+    marginBottom: 10,
+
     borderRadius: 9,
     padding: 10,
   },
   cajaBotones: {
-    flex: 1,
+    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  botonRojo: { backgroundColor: "red", padding: 7, borderRadius: 2 },
-  botonVerde: { backgroundColor: "green", padding: 7, borderRadius: 2 },
+  botonRojo: {
+    backgroundColor: "#EF3E3E",
+    padding: 7,
+    width: 83,
+    alignItems: "center",
+    borderRadius: 4,
+  },
+  botonVerde: {
+    backgroundColor: "#8CEF3E",
+    padding: 7,
+    width: 83,
+    alignItems: "center",
+    borderRadius: 4,
+  },
 
   botonEliminar: {
     marginTop: 7,
-    backgroundColor: "red",
+    backgroundColor: "#EF3E3E",
     padding: 7,
-    borderRadius: 2,
-    borderWidth: 1,
+    width: 83,
+    marginBottom: 20,
+    alignItems: "center",
+    borderRadius: 4,
   },
 });
 
