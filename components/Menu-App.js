@@ -3,10 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 export default function Prueba() {
   return (
-    <View style={styles.container}>
-      <Text>Hello world2ssss</Text>
-      <StatusBar style="auto" />
-    </View>
+
   );
 }
 
