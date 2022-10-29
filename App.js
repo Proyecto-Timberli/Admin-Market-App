@@ -1,11 +1,9 @@
-
 import { StyleSheet, Text, View } from "react-native";
-import NavBar from "./components/Productos/NavBar";
+import MenuMain from './components/MenuMain'
+
 export default function App() {
-  return (
-    <View>
-      <NavBar />
-    </View>
+  return ( 
+    <MenuMain/> 
   );
 }
 
