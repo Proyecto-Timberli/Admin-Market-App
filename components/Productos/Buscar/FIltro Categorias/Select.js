@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { FlatList,StyleSheet,TextInput,TouchableOpacity,View,Text,Modal, SafeAreaView} from "react-native";
+import { Dimensions,FlatList,StyleSheet,TextInput,TouchableOpacity,View,Text,Modal, SafeAreaView} from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+const {width, height} = Dimensions.get('window');
  /////////////////////////////////////////////////////
   /////////////////////////////////////////////////////
   const Touchable = (text='Select a option',onPress)=>{
@@ -9,8 +9,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
       return (
         <TouchableOpacity 
           onPress={onPress}
-          style={estilos.selectTouch}>
-          <Text style={estilos.selectTextOne}>{text}</Text>
+          style={styles.selectTouch}>
+          <Text style={styles.selectTextOne}>{text}</Text>
           <Icon name="chevron-right" color="#555" size={26}/>
         </TouchableOpacity>
       )
@@ -20,9 +20,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
   const Option =(item, value , selected ,objKey,onPress) =>{
     const OptionComponent =()=>{
       return (
-        <TouchableOpacity style={estilos.selctedContainer} onPress={onPress}>
-          <Text style={estilos.selectText}>{item?.[value]}</Text>
-          {selected?.[objKey]=== item?.[objKey] ? (<Icon name="check" color="green" size={18}/>):null}
+        <TouchableOpacity style={styles.selctedContainer} onPress={onPress}>
+          <Text style={styles.selectText}>{item?.[value]}</Text>
+          {selected?.[objKey]=== item?.[objKey] ? (<Icon name="check" color="green" size={22}/>):null}
         </TouchableOpacity>
       )
     }
@@ -62,12 +62,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
        <TouchableComponent/>  
        <Modal visible={visible} animationType="slide">
          <SafeAreaView style={{flex:1}}>
-           <View style={estilos.cabeza}>
+           <View style={styles.cabeza}>
              <TouchableOpacity onPress={()=> setVisible(false)}>
              <Icon name="close" size={26} color={'#212121'}/>
              </TouchableOpacity>
-             <View style={estilos.tituloContenedor}>
-               <Text style={estilos.titulo}>{title}</Text>
+             <View style={styles.tituloContenedor}>
+               <Text style={styles.titulo}>{title}</Text>
              </View>
            </View>
            <FlatList  
@@ -80,10 +80,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
       </>
     )
   }
+ 
   const styles = StyleSheet.create({
-    
-  })
-  const estilos = StyleSheet.create({
     selectTouch:{
       flexDirection:'row',
       justifyContent: 'center',
@@ -96,9 +94,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
       fontWeight:'800', 
     },
     selectText:{
-      marginLeft:50,
+      marginLeft:width*0.38,
       color:'#212121',
-      fontSize:14,
+      fontSize:16,
       fontWeight:'600', 
     },
     cabeza:{
@@ -112,20 +110,22 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
       flex:1,
     },
     titulo:{
+      marginLeft:width*0.05,
       fontSize:18,
-      marginLeft:-38,
       fontWeight: "bold",
       color:"#212121",
       textAlign:"center",
     },
     selctedContainer:{
+      width:width,
       flexDirection:'row',
       alignItens: 'center',
       justifyContent: 'space-between',
       paddingHorizontal: 12,
       paddingVertical:12,
       borderBottomColor:'#eee',
-      borderBottomWidth:1,
+      borderBottomWidth:10,
+      backgroundColor:'#DADEDF',
     },
     
   });

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Dimensions, StyleSheet,TextInput,TouchableOpacity,View,Text,Modal, SafeAreaView} from "react-native";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios'
+import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
 const {width, height} = Dimensions.get('window');
+const iconSize= 50;
+
 
 export default function ModificarVarios({estado,listaSeleccionados,setListaSeleccionados,listaCompleta,recargarLista}){
     const [todos,setTodos]=useState(false)
@@ -61,8 +64,8 @@ export default function ModificarVarios({estado,listaSeleccionados,setListaSelec
                 style={styles.buttonTodos}>
                 <TouchableOpacity style={styles.buttonTodos} onPress={()=>checkTodos()}>
                     <Text style={estilos.texto}>Todos</Text>
-                    {!todos&&<Icon name="checkbox-blank-outline" size={26} color={'#212121'}/>}
-                    {!!todos&&<Icon name="checkbox-outline" size={26} color={'green'}/>}
+                    {!todos&&<Icons name="checkbox-blank-outline" size={26} color={'#212121'}/>}
+                    {!!todos&&<Icons name="checkbox-outline" size={26} color={'green'}/>}
                 </TouchableOpacity>
             </LinearGradient>}
             {!!listaSeleccionados.length&&
@@ -76,13 +79,34 @@ export default function ModificarVarios({estado,listaSeleccionados,setListaSelec
                 </TouchableOpacity>
             </LinearGradient>}
             <Modal visible={visible} animationType="slide">
-                <SafeAreaView style={{flex:1}}>
+            <LinearGradient 
+                colors={[ '#F1F4F4','#DADEDF']}
+                start={{x:1,y:0}}
+                end={{x:0,y:1}}
+                style={{width:width,height:height}}>
+                <SafeAreaView style={{flex:1, width:width, height:height}}>
                     <View style={estilos.cabezaModal}>
-                        <TouchableOpacity style={estilos.boton2}><Text style={estilos.texto2}>Lista a modificar</Text></TouchableOpacity>  
-                        <View style={estilos.container2}>
-                            <TouchableOpacity onPress={()=>setAumentar(true)} style={aumentar?{...estilos.boton2, backgroundColor:'green'}:estilos.boton2}><Text style={aumentar?{...estilos.texto2, color:'white'}:estilos.texto2}>Aumentar precios</Text></TouchableOpacity>       
-                            <TouchableOpacity onPress={()=>setAumentar(false)} style={!aumentar?{...estilos.boton2, backgroundColor:'green'}:estilos.boton2}><Text style={!aumentar?{...estilos.texto2, color:'white'}:estilos.texto2}>Bajar Precios</Text></TouchableOpacity>    
+                        {/* Opciones aumentar bajar() -------------------------------------*/}
+                        <View style={estilos.container2}>               
+                            <TouchableOpacity onPress={()=>setAumentar(true)}>
+                                <LinearGradient 
+                                    colors={!aumentar?[ '#F8E9E9','#B9C7CA']:[ '#206593','#25EADE']}
+                                    start={{x:1,y:0}}
+                                    end={{x:0,y:1}}
+                                    style={styles.botonOpciones}><Text style={!!aumentar?{...estilos.texto2, color:'white'}:estilos.texto2}>Aumentar precios</Text>
+                                </LinearGradient> 
+                            </TouchableOpacity>      
+                            
+                            <TouchableOpacity onPress={()=>setAumentar(false)}>
+                                <LinearGradient 
+                                    colors={!!aumentar?[ '#F8E9E9','#B9C7CA']:[ '#206593','#25EADE']}
+                                    start={{x:1,y:0}}
+                                    end={{x:0,y:1}}
+                                    style={styles.botonOpciones}><Text style={!aumentar?{...estilos.texto2, color:'white'}:estilos.texto2}>Bajar Precios</Text>
+                                </LinearGradient> 
+                            </TouchableOpacity>    
                         </View>
+                        {/* entrada porcentaje() -------------------------------------*/}
                         <View style={estilos.container2}>
                             <TextInput
                                 style={estilos.busqueda}
@@ -90,16 +114,72 @@ export default function ModificarVarios({estado,listaSeleccionados,setListaSelec
                                 value={valor}
                                 placeholder="999999"
                             />
-                            <TouchableOpacity style={estilos.boton2}><Text style={estilos.texto2}>%</Text></TouchableOpacity>  
+                            <TouchableOpacity>
+                            <LinearGradient 
+                                    colors={[ '#F8E9E9','#B9C7CA']}
+                                    start={{x:1,y:0}}
+                                    end={{x:0,y:1}}
+                                    style={styles.botonOpciones}>
+                                    <Text style={estilos.texto2}>%</Text>
+                            </LinearGradient>  
+                            </TouchableOpacity>
                         </View>
-                        <TouchableOpacity onPress={()=> listaFinal()} style={estilos.boton2}><Text style={estilos.texto2}>Aplicar</Text></TouchableOpacity>    
-                        <TouchableOpacity style={estilos.boton2}><Text style={estilos.texto2}>Lista Final</Text></TouchableOpacity> 
-                        <View style={estilos.container}>
-                            <TouchableOpacity onPress={()=>salir()} style={estilos.botonS}><Text style={estilos.textBoton }>Cancelar</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={()=>guardar()} style={{...estilos.botonS, backgroundColor: "green"}}><Text style={estilos.textBoton }>Guardar</Text></TouchableOpacity>
-                        </View>             
+                        {/* button Aplicar() -------------------------------------*/}
+                        <TouchableOpacity onPress={()=> listaFinal()} style={styles.botonAplicar}>
+                            <LinearGradient 
+                                    colors={!valor?[ '#F8E9E9','#B9C7CA']:[ '#206593','#25EADE']}
+                                    start={{x:1,y:0}}
+                                    end={{x:0,y:1}}
+                                    style={styles.botonOpciones}>
+                                    <Text style={!valor?estilos.texto2:{...estilos.texto2, color:'white'}}>Aplicar</Text>
+                            </LinearGradient> 
+                        </TouchableOpacity>  
+                        {/* button listaFinal() ---------------------------------*/}
+                        <TouchableOpacity>
+                            <LinearGradient 
+                                    colors={!valor?[ '#F8E9E9','#B9C7CA']:[ '#206593','#25EADE']}
+                                    start={{x:1,y:0}}
+                                    end={{x:0,y:1}}
+                                    style={styles.botonOpciones}>
+                                    <Text style={!valor?estilos.texto2:{...estilos.texto2, color:'white'}}>Ver Lista Final</Text>
+                            </LinearGradient> 
+                        </TouchableOpacity> 
+                        {/* NavBar() -------------------------------------------*/}
+                        <View style = {styles.containerNavBar}>   
+                            <TouchableOpacity style={styles.buttom} onPress={()=>salir()}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:"#206593",offset:"0",opacity:"1"},
+                                        {color:"#25EADE",offset:"1",opacity:"1"},
+                                    ]}
+                                    name="delete-forever" type="material-community" />  
+                                    <Text style={styles.textNavBar}>Salir</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:"#206593",offset:"0",opacity:"1"},
+                                        {color:"#25EADE",offset:"1",opacity:"1"},
+                                    ]}
+                                    name="home" type="material-community" />  
+                                    <Text style={styles.textNavBar}>Home</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttom} onPress={()=>guardar()}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:"#206593",offset:"0",opacity:"1"},
+                                        {color:"#25EADE",offset:"1",opacity:"1"},
+                                    ]}
+                                    name="content-save" type="material-community" />  
+                                    <Text style={styles.textNavBar} >Guardar</Text>
+                            </TouchableOpacity>
+                        </View>                  
                     </View>
                 </SafeAreaView>
+                </LinearGradient>
            </Modal>
        </View>
     )
@@ -120,6 +200,36 @@ const styles = StyleSheet.create({
         width:width*0.3,
         justifyContent:'center',
         borderRadius:15,
+    },
+    textNavBar : {
+        textAlign: "center",
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: 'black',               
+    } ,
+  
+    containerNavBar: {
+        position: "absolute",
+        bottom: 0,
+        width: '100%',
+        height: 70,
+         backgroundColor: '#fff',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    botonOpciones:{
+        marginTop:40,
+        padding: 10,
+        marginBottom: 40,
+        alignItems:"center",
+        textAlign: 'center',
+        borderRadius:15,
+    },
+    botonAplicar:{
+        padding: 10,
+        alignItems:"center",
+        textAlign: 'center',
     },
 
 })
@@ -151,14 +261,15 @@ const estilos = StyleSheet.create({
         flexDirection:"column",
         alignItems:"center",
         justifyContent: 'center',
+        width:width, height:height,
     },
     busqueda: {
         textAlign: "center",
-        width: 200,
-        backgroundColor: "white",
+        width: 200,  
     },
       container: {
-        marginTop: "25%",
+        position: "absolute",
+        bottom: -80,
         width: '100%',
         height: 50,
         backgroundColor: '#fff',
@@ -170,7 +281,7 @@ const estilos = StyleSheet.create({
     },
     container2: {
         width: '100%',
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
         justifyContent: 'space-around',
         flexDirection: 'row',
     },

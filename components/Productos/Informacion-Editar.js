@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar } from 'expo-status-bar';
-import { TextInput, Alert, Pressable, Button, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Dimensions,TextInput, Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios'
-import { useNavigation } from '@react-navigation/native';
+import { Icon } from 'react-native-gradient-icon';
+const {width, height} = Dimensions.get('window');
+const iconSize= 50;
+
 
 function Modal({dato, state, setState, stateModal}){
   const [editado, setEditado]=useState(state[dato])
@@ -23,17 +26,23 @@ function Modal({dato, state, setState, stateModal}){
     stateModal(false)
   }
   return (
-    <View style={estilos.modal}>
-      <Text style={estilos. textTitle} ></Text>
+    <View style={styles.modalContainer}>
+    <LinearGradient 
+      colors={[ '#F8E9E9','#B9C7CA']}
+      start={{x:1,y:0}}
+      end={{x:0,y:1}}
+      style={styles.modal}>
+      <Text style={styles. textTitle} ></Text>
       <TextInput
-            style={estilos.busqueda}
+            style={styles.textInput}
             onChangeText={(e) => modalHandler(e)}
-            value={editado}
+            value={editado?.toString()}
           />
-      <View style={estilos.modal2}>
-        <TouchableOpacity onPress={()=>checkOk()}><Icon name="checkbox-marked" size={35} color="green" /></TouchableOpacity> 
-        <TouchableOpacity onPress={()=>exit()}><Icon name="close-box" size={35} color="red" /></TouchableOpacity> 
-      </View>   
+      <View style={styles.modalButtonsContainers}>
+        <TouchableOpacity onPress={()=>checkOk()}><Icons name="checkbox-marked" size={35} color="green" /></TouchableOpacity> 
+        <TouchableOpacity onPress={()=>exit()}><Icons name="close-box" size={35} color="red" /></TouchableOpacity> 
+      </View> 
+    </LinearGradient>
     </View>
   )
 }
@@ -50,8 +59,15 @@ function Editar({dato, setState, stateModal }){
   return (
     <TouchableOpacity
       onPress={()=> edit()}>
-      <Icon name="border-color" size={25} color="black" />
+      <Icon  
+          size={25}
+          colors={[
+            {color:"#206593",offset:"0",opacity:"1"},
+            {color:"#25EADE",offset:"1",opacity:"1"},
+          ]}
+          name="pencil" type="material-community" /> 
     </TouchableOpacity>
+    
   )
 }
 
@@ -59,21 +75,17 @@ function Editar({dato, setState, stateModal }){
 
 
 
-export default function InformacionProducto({id,nombre,precio,stock,categoria,marca,precioCompra,informacionProducto,imagen,setInfo}) {
-  const navigation = useNavigation();
+export default function InformacionProducto({navigation,route}) {
+  const {amount, buyprice, categories, description,id,image, make, name, price, stock} = route.params
   /////////////////////////////////////////////////
   const[editable,setEditable]= useState({
     id:id,
-    name: nombre,
-    price: precio,
+    name: name,
+    price: price,
     stock : stock,
-    categoriesids: categoria,
-    make: marca,
-    // precioAnterior : productoInfo[0].precioAnterior,
-    buyprice: precioCompra,
-    // codigo : productoInfo[0].codigo,
-    // description: informacionProducto,
-    // imagen : imagen,
+    categoriesids: categories,
+    make: make,
+    buyprice: buyprice,
   })
   /////////////////////////////////////////////////
   const baseUrl = "https://admin-market-api.herokuapp.com" ;
@@ -101,177 +113,245 @@ export default function InformacionProducto({id,nombre,precio,stock,categoria,ma
   const[modal,setModal]= useState(false)
   const[dato,setDato]= useState(false)
   const salir = () => {
-    console.log("salir")
-    setInfo(false)
+    navigation.navigate("Productos")
   }
   const eliminar = () => {
     deleteProductos({products:[editable]})
     console.log("eliminar")
     Alert.alert("Producto Eliminado");
-    setInfo(false)
+    navigation.navigate("Productos")
   }
   const guardar = () => {
     putProductos({products:[editable]})
     console.log("guardar")
     Alert.alert("Producto Actualizado");
+    navigation.navigate("Productos")
   }
   return (
-       <View>
+        <LinearGradient 
+                colors={[ '#F1F4F4','#DADEDF']}
+                start={{x:1,y:0}}
+                end={{x:0,y:1}}
+                style={{width:width,height:height}}>
+       <View style={styles.container}>
          {modal&&<Modal dato={dato} state={editable} setState={setEditable} stateModal={setModal}/>}
-            <Text></Text>
-            <Text></Text>
-            <Text style = {estilos. textTitle}>Informacion del Producto: {id}</Text>
-            <Text></Text>
-            <Text></Text>
-            <View style={estilos.cotainerIcon}>
-            <Text style = {estilos.text}> Nombre del producto: {editable.name} </Text>
-            <Editar dato={"name"} setState={setDato} stateModal={setModal}/>
-            </View>
-            <Text></Text> 
-            <View style={estilos.cotainerIcon}>
-              <Text style = {estilos.text}> Precio: {editable.price}</Text>
+            <View style={{...styles.cotainerTitle}}>
+              <Text style = {styles. textTitle}>Informacion del Producto: {id}</Text>
+            </View> 
+
+            <LinearGradient 
+              colors={[ '#F8E9E9','#B9C7CA']}
+              start={{x:1,y:0}}
+              end={{x:0,y:1}}
+              style={styles.cotainerIcon}>       
+              <Text style = {styles.text}> Nombre del producto: {editable.name} </Text>
+              <Editar dato={"name"} setState={setDato} stateModal={setModal}/>
+            </LinearGradient>
+           
+            <LinearGradient 
+              colors={[ '#F8E9E9','#B9C7CA']}
+              start={{x:1,y:0}}
+              end={{x:0,y:1}}
+              style={styles.cotainerIcon}>    
+              <Text style = {styles.text}> Precio: {editable.price}</Text>
               <Editar dato={"price"} setState={setDato} stateModal={setModal}/>
-            </View>
-            <Text></Text>
-            <View style={estilos.cotainerIcon}>
-              <Text style = {estilos.text}> Stock: {editable.stock}</Text>
+              </LinearGradient>
+            
+            <LinearGradient 
+              colors={[ '#F8E9E9','#B9C7CA']}
+              start={{x:1,y:0}}
+              end={{x:0,y:1}}
+              style={styles.cotainerIcon}>    
+              <Text style = {styles.text}> Stock: {editable.stock}</Text>
               <Editar dato={"stock"}setState={setDato} stateModal={setModal}/>
-            </View>
-            <Text></Text>
-            <View style={estilos.cotainerIcon}>
-              <Text style = {estilos.text}> Categoria: {editable.categoriesids}</Text>
+            </LinearGradient>
+            
+            <LinearGradient 
+              colors={[ '#F8E9E9','#B9C7CA']}
+              start={{x:1,y:0}}
+              end={{x:0,y:1}}
+              style={styles.cotainerIcon}> 
+              <Text style = {styles.text}> Categoria: {editable.categoriesids}</Text>
               <Editar dato={"categoriesids"}setState={setDato} stateModal={setModal}/>
-            </View>
-            <Text></Text>
-            <View style={estilos.cotainerIcon}>
-              <Text style = {estilos.text}> Marca: {editable.make} </Text>
+            </LinearGradient>
+           
+            <LinearGradient 
+              colors={[ '#F8E9E9','#B9C7CA']}
+              start={{x:1,y:0}}
+              end={{x:0,y:1}}
+              style={styles.cotainerIcon}> 
+              <Text style = {styles.text}> Marca: {editable.make} </Text>
               <Editar dato={"make"}setState={setDato} stateModal={setModal}/>
-            </View>
-            <Text></Text>
-            <View style={estilos.cotainerIcon}>
-              <Text style = {estilos.text}> Precio anterior: {editable.precioAnterior} </Text>
+            </LinearGradient>
+            
+            <LinearGradient 
+              colors={[ '#F8E9E9','#B9C7CA']}
+              start={{x:1,y:0}}
+              end={{x:0,y:1}}
+              style={styles.cotainerIcon}> 
+              <Text style = {styles.text}> Precio anterior: {editable.precioAnterior} </Text>
               <Editar dato={"precioAnterior"}setState={setDato} stateModal={setModal}/>
-            </View>
-            <Text></Text>
-            <View style={estilos.cotainerIcon}>
-              <Text style = {estilos.text}> Precio de compra: {editable.buyprice} </Text>
+            </LinearGradient>
+            
+            <LinearGradient 
+              colors={[ '#F8E9E9','#B9C7CA']}
+              start={{x:1,y:0}}
+              end={{x:0,y:1}}
+              style={styles.cotainerIcon}> 
+              <Text style = {styles.text}> Precio de compra: {editable.buyprice} </Text>
               <Editar dato={"buyprice"}setState={setDato} stateModal={setModal}/>
-            </View>
-            <Text></Text>
-            <View style={estilos.cotainerIcon}>
-              <Text style = {estilos.text}> Codigo: {editable.codigo} </Text>
+            </LinearGradient>
+            
+            <LinearGradient 
+              colors={[ '#F8E9E9','#B9C7CA']}
+              start={{x:1,y:0}}
+              end={{x:0,y:1}}
+              style={styles.cotainerIcon}> 
+              <Text style = {styles.text}> Codigo: {editable.codigo} </Text>
               <Editar dato={"codigo"}setState={setDato} stateModal={setModal}/>
-            </View>
-            <Text></Text>
-            <View style={estilos.cotainerIcon}>
-              <Text style = {estilos.text}> Informacion: {editable.description} </Text>
+            </LinearGradient>
+            
+            <LinearGradient 
+              colors={[ '#F8E9E9','#B9C7CA']}
+              start={{x:1,y:0}}
+              end={{x:0,y:1}}
+              style={styles.cotainerIcon}> 
+              <Text style = {styles.text}> Informacion: {editable.description} </Text>
               <Editar dato={"description"}setState={setDato} stateModal={setModal}/>
-            </View>
-            <Text></Text>
-            <View style={estilos.cotainerIcon}>
-              <Text style = {estilos.text}> Imagen: {editable.imagen} </Text>
+              </LinearGradient>
+            
+            <LinearGradient 
+              colors={[ '#F8E9E9','#B9C7CA']}
+              start={{x:1,y:0}}
+              end={{x:0,y:1}}
+              style={styles.cotainerIcon}> 
+              <Text style = {styles.text}> Imagen: {editable.imagen} </Text>
               <Editar dato={"imagen"}setState={setDato} stateModal={setModal}/>
-            </View>
-            {/* <View style={estilos.container}>
-              <TouchableOpacity onPress={()=>salir()} style={estilos.boton}><Text style={estilos.textBoton }>Salir</Text></TouchableOpacity>
-              <TouchableOpacity onPress={()=>eliminar()} style={estilos.boton}><Text style={estilos.textBoton }>Eliminar</Text></TouchableOpacity>
-              <TouchableOpacity onPress={()=>guardar()} style={{...estilos.boton, backgroundColor: "green"}}><Text style={estilos.textBoton }>Guardar</Text></TouchableOpacity>
-            </View> */}
-            <View style={estilos.containerNavBar}>     
-              <TouchableOpacity onPress={()=>eliminar()} style={estilos.botonNavBar}><LinearGradient  colors={[ '#ff7f49','#f23c3c', '#d20038']} style={{...estilos.botonNavBar,width: '100%'}}><Text style={estilos.textNavBar}>Eliminar</Text></LinearGradient></TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("MenuPrincipal")}style={estilos.botonNavBar}><LinearGradient  colors={[ '#54b2f5','#9fa5f1', '#dc92cf']} style={{...estilos.botonNavBar,width: '100%'}}><Icon name="home" size={35} color="white" /></LinearGradient></TouchableOpacity>
-              <TouchableOpacity onPress={()=>guardar()}style={estilos.botonNavBar}><LinearGradient  colors={['#3cf23c', '#00dea1']} style={{...estilos.botonNavBar,width: '100%'}}><Text style={estilos.textNavBar }>Guardar</Text></LinearGradient></TouchableOpacity>
+            </LinearGradient>
+            <View style = {styles.containerNavBar}>   
+            <TouchableOpacity style={styles.buttom} onPress={()=>eliminar()}>
+                <Icon  
+                    size={iconSize}
+                    colors={[
+                        {color:"#206593",offset:"0",opacity:"1"},
+                        {color:"#25EADE",offset:"1",opacity:"1"},
+                    ]}
+                    name="delete-forever" type="material-community" />  
+                    <Text style={styles.textNavBar}>Eliminar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
+                <Icon  
+                    size={iconSize}
+                    colors={[
+                        {color:"#206593",offset:"0",opacity:"1"},
+                        {color:"#25EADE",offset:"1",opacity:"1"},
+                    ]}
+                    name="home" type="material-community" />  
+                    <Text style={styles.textNavBar}>Home</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttom} onPress={()=>guardar()}>
+                <Icon  
+                    size={iconSize}
+                    colors={[
+                        {color:"#206593",offset:"0",opacity:"1"},
+                        {color:"#25EADE",offset:"1",opacity:"1"},
+                    ]}
+                    name="content-save" type="material-community" />  
+                    <Text style={styles.textNavBar} >Guardar</Text>
+            </TouchableOpacity>
             </View>
             
       </View>
+      </LinearGradient>
   )
 }
 
 
 
-const estilos = StyleSheet.create({
+const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    alignItems:"center",
+    width:width, height:height,
+  },
   textNavBar : {
       textAlign: "center",
-      fontSize: 20,
+      fontSize: 14,
       fontWeight: 'bold',
-      color: '#fff',               
+      color: 'black',               
   } ,
-  botonNavBar : {
-      width: '23%',
-      height: 50,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: 10,
-      marginVertical: 10,
-      marginHorizontal: 20,
-      shadowColor: "#000",
-      shadowOffset: {
-          width: 0,
-          height: 12,
-      },  shadowOpacity: 0.58,
-      shadowRadius: 16.00,
-      elevation: 24,
-      backgroundColor: "green",
-  },
+
   containerNavBar: {
-      // position: "absolute",
-      bottom: 0,
-      marginTop: "25%",
+      position: "absolute",
+      bottom: -20,
       width: '100%',
-      height: 90,
-      backgroundColor: '#fff',
-      justifyContent: 'space-between',
+      height: 70,
+       backgroundColor: '#fff',
+      justifyContent: 'space-around',
       alignItems: 'center',
       flexDirection: 'row',
   },
-  busqueda: {
-    padding: 10,
-    textAlign: "center",
-    borderRadius: 5,
-    width: 200,
-    elevation: 8,
-    borderWidth: 1,
-    backgroundColor: "white",
-  },
-  modal2:{
+  modalButtonsContainers:{
     width: '100%',
     justifyContent: 'space-around',
     flexDirection: 'row',
   },
   modal:{
     zIndex: 10,
-    marginTop: "30%",
+    marginTop: "60%",
     position: "absolute",
     width: '90%',
     marginLeft: '5%',
-    height: 300,
-    backgroundColor: '#fff',
+    height: "30%",
+    backgroundColor: 'black',
     justifyContent: 'space-around',
     alignItems: 'center',
     paddingHorizontal: 0,
     elevation: 10,
     flexDirection: 'column',
   },
+  modalContainer:{
+    zIndex: 10,
+    width: width,
+    height: height,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
   cotainerIcon: {
-    width: '90%',
-    marginLeft: '5%',
+    width: width*0.9,
     backgroundColor: '#fff',
+    flexWrap:"wrap",
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 0,
-    elevation: 0,
     flexDirection: 'row',
+    padding:5,
+    margin:10
+  },
+  cotainerTitle: {
+    width: width,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding:5,
+    marginTop: 40,
   },
   textTitle : {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'black',    
-    marginLeft: 50           
+    color: 'black',            
   } ,
   text : {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: 'black',    
-    marginLeft: 30           
+    color: 'black',  
+    width:"90%"          
   } ,
+   textInput:{
+    padding: 10,
+    paddingStart:30,
+    width:width*0.5,
+    height:50,
+    marginTop:20,
+    borderBottomWidth:2,
+    borderBottomColor:"#2C7DA0",
+  },
 })
