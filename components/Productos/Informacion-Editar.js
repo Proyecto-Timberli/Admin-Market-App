@@ -1,15 +1,47 @@
-import React, { useEffect, useState } from "react";
-import { StatusBar } from 'expo-status-bar';
+import React, {useState } from "react";
 import { Dimensions,TextInput, Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import Constants from 'expo-constants';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { LinearGradient } from 'expo-linear-gradient';
+////////////////////////////////////////////////////
 import axios from 'axios'
+const baseUrl = "https://admin-market-api.herokuapp.com" ;
+////////////////////////////////////////////////////
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Icon } from 'react-native-gradient-icon';
+import { LinearGradient } from 'expo-linear-gradient';
 const {width, height} = Dimensions.get('window');
+////////////////////Colors//////////////////////////
 const iconSize= 50;
-
-
+const colorA = [ '#F8E9E9','#B9C7CA'] 
+const colorB =[ '#206593','#25EADE']
+const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
+const iconColorA="#206593"
+const iconColorB="#25EADE"
+////////////////////////////////////////////////////
+function ModalSalir({deleteFunction,deleteData,navigation,stateModal}){
+  function checkOk(){
+    deleteFunction(deleteData)
+    Alert.alert("Producto Eliminado");
+    stateModal(false)
+    navigation.navigate("MenuProductos")
+  }
+  function exit(){
+    stateModal(false)
+  }
+  return (
+    <View style={styles.modalContainer}>
+    <LinearGradient 
+      colors={colorA}
+      start={{x:1,y:0}}
+      end={{x:0,y:1}}
+      style={styles.modal}>
+      <Text style={{...styles.textTitle,marginTop:30}}>Desea eliminar el producto?</Text>
+      <View style={styles.modalButtonsContainers}>
+        <TouchableOpacity onPress={()=>checkOk()}><Icons name="checkbox-marked" size={35} color="green" /></TouchableOpacity> 
+        <TouchableOpacity onPress={()=>exit()}><Icons name="close-box" size={35} color="red" /></TouchableOpacity> 
+      </View> 
+    </LinearGradient>
+    </View>
+  )
+}
 function Modal({dato, state, setState, stateModal}){
   const [editado, setEditado]=useState(state[dato])
   function modalHandler(e){
@@ -46,10 +78,6 @@ function Modal({dato, state, setState, stateModal}){
     </View>
   )
 }
-
-
-
-
 function Editar({dato, setState, stateModal }){
   const edit = ()=>{
     setState(dato)
@@ -71,10 +99,6 @@ function Editar({dato, setState, stateModal }){
   )
 }
 
-
-
-
-
 export default function InformacionProducto({navigation,route}) {
   const {amount, buyprice, categories, description,id,image, make, name, price, stock} = route.params
   /////////////////////////////////////////////////
@@ -88,7 +112,6 @@ export default function InformacionProducto({navigation,route}) {
     buyprice: buyprice,
   })
   /////////////////////////////////////////////////
-  const baseUrl = "https://admin-market-api.herokuapp.com" ;
   const putProductos=(productos)=>{
       axios.put(baseUrl+"/api/product",productos
       )
@@ -112,20 +135,19 @@ export default function InformacionProducto({navigation,route}) {
   /////////////////////////////////////////////////
   const[modal,setModal]= useState(false)
   const[dato,setDato]= useState(false)
+  const[modalSalir,setModalSalir]= useState(false)
   const salir = () => {
     navigation.navigate("Productos")
   }
   const eliminar = () => {
-    deleteProductos({products:[editable]})
     console.log("eliminar")
-    Alert.alert("Producto Eliminado");
-    navigation.navigate("Productos")
+    setModalSalir(true)
   }
   const guardar = () => {
     putProductos({products:[editable]})
     console.log("guardar")
     Alert.alert("Producto Actualizado");
-    navigation.navigate("Productos")
+    navigation.navigate("MenuProductos")
   }
   return (
         <LinearGradient 
@@ -135,6 +157,7 @@ export default function InformacionProducto({navigation,route}) {
                 style={{width:width,height:height}}>
        <View style={styles.container}>
          {modal&&<Modal dato={dato} state={editable} setState={setEditable} stateModal={setModal}/>}
+         {modalSalir&&<ModalSalir deleteFunction={deleteProductos}deleteData={{products:[editable]}}navigation={navigation}stateModal={setModalSalir}/>}
             <View style={{...styles.cotainerTitle}}>
               <Text style = {styles. textTitle}>Informacion del Producto: {id}</Text>
             </View> 

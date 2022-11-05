@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator,Dimensions,FlatList,StyleSheet,TextInput,TouchableOpacity,View,Text} from "react-native";
 import CardProducto from "./Card-Producto";
-import InformacionProducto from './Informacion-Editar'
 import axios from 'axios'
 import CategoriesSelect from './Buscar/FIltro Categorias/FiltroCategorias'
 import ModificarVarios from './Buscar/ModificarVarios'
 import { LinearGradient } from 'expo-linear-gradient';
 const {width, height} = Dimensions.get('window');
+
+
 const Productos = ({navigation}) => {
   const baseUrl = "https://admin-market-api.herokuapp.com" ;
   const [productosApi,setProductosApi]= useState(null)
@@ -74,20 +75,6 @@ const Productos = ({navigation}) => {
   },[arraySeleccionados]);
   /////////////////////////////////////////////////////
   const [IdSelect, setIdSelect] = useState(0);
-  // let productoInfo =()=>{ if(productosApi){return productosApi.filter(product=> product.id === IdSelect)}}
-  // let productoSelect = {
-  //   id:productoInfo()[0].id,
-  //   nombre:productoInfo()[0].name,
-  //   precio:productoInfo()[0].price,
-  //   stock:productoInfo()[0].stock,
-  //   categoria:productoInfo()[0].categories,
-  //   marca:productoInfo()[0].make,
-  //   // precioAnterior : productoInfo[0].precioAnterior,
-  //   precioCompra:productoInfo()[0].buyprice,
-  //   // codigo : productoInfo[0].codigo,
-  //   informacionProducto:productoInfo()[0].description,
-  //   imagen:productoInfo()[0].image,
-  // }
   const onLongPressHandler=(params)=>{
     if(!seleccionarVarios){
       setSeleccionarVarios(true)
@@ -138,7 +125,7 @@ const Productos = ({navigation}) => {
             placeholder="Buscar..."
             />
             <CategoriesSelect filtrar={filtroCategory}/>
-            <ModificarVarios estado={seleccionarVarios} listaSeleccionados={arraySeleccionados} setListaSeleccionados={setArraySeleccionados} listaCompleta={arrayAMostrar} recargarLista={peticionProductos}/>
+            <ModificarVarios estado={seleccionarVarios} listaSeleccionados={arraySeleccionados} setListaSeleccionados={setArraySeleccionados} listaCompleta={arrayAMostrar} recargarLista={peticionProductos} navigation={navigation}/>
           </View>
           {!productosApi?<Loading/>:
           <FlatList
