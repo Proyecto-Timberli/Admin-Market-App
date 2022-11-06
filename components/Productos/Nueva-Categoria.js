@@ -1,23 +1,27 @@
+////////////////////////////////////////////////////
 import React, {useEffect, useState } from "react";
-import axios from 'axios' ;
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Component from "react"
+import { ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,} from "react-native";
+////////////////////////////////////////////////////
+import axios from 'axios'
+const baseUrl = "https://admin-market-api.herokuapp.com" ;
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
-import {
-  Alert,
-  Button,
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { useNavigation } from '@react-navigation/native';
+const {width, height} = Dimensions.get('window');
+////////////////////Colors//////////////////////////
+const iconSize= 50;
+const colorA = [ '#F8E9E9','#B9C7CA'] 
+const colorB =[ '#206593','#25EADE']
+const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
+const iconColorA="#206593"
+const iconColorB="#25EADE"
+////////////////////////////////////////////////////
 
-export default function NuevaCategoria(){
+export default function NuevaCategoria({navigation}){
   /////////////////////////////////////////////////
-  const navigation = useNavigation();
-  const baseUrl = "https://admin-market-api.herokuapp.com" ;
   const [categoriasApi,setCategoriasApi]= useState(null)
   const peticionProductos=()=>{
       axios.get(baseUrl+"/api/category"
@@ -33,11 +37,20 @@ export default function NuevaCategoria(){
       peticionProductos()
   },[]);
   /////////////////////////////////////////////////
+  const deleteCategory=(category)=>{
+    axios.delete(baseUrl+"/api/category",{ data: category})
+    .then(function (response) {
+      console.log(response.data);
+    })
+    .catch(function (error){
+      console.log(error);
+    });
+  }
+  /////////////////////////////////////////////////
+  /////////////////////////////////////////////////
   /////////////////////////////////////////////////
   const [categoria, setCategoria] = useState("");
-
   const [text, setText] = useState("");
-
   const agregarCategoria = function (e) {
     function namesCategorias(categorias){
       let result=[]
@@ -47,7 +60,7 @@ export default function NuevaCategoria(){
       return result
     }
     if (e.name == "") {
-      Alert.alert("Escribí una Categoria");
+      Alert.alert("Debes completar los campos");
       return;
     }
     if (namesCategorias(categoriasApi).includes(e.name)) {
@@ -68,186 +81,160 @@ export default function NuevaCategoria(){
     setText("")
     Alert.alert("Categoria agregada");
   };
-  
-  const eliminarCategoria = function (e) {
-    // let respuesta = array.filter((a) => a !== e);
-    // setArray(respuesta);
-    // setCategoria("");
+  const eliminarCategoria = async function (e) {
     console.log("eliminar categoria")
+    await deleteCategory(categoria)
+    await peticionProductos()
+    setCategoria("")
   };
 
   return (
-    <View style={estilos.container}>
-      <Text style={{textAlign: "center",}}>Categorias Actuales</Text>
-      <View >
+    <LinearGradient 
+    colors={colorBackgroundModal}
+    start={{x:1,y:0}}
+    end={{x:0,y:1}}
+    style={{width:width,height:height}}>
+    <View style={styles.container}>
+      <Text style={styles.title}>Categorias</Text>
+      <View style={styles.categoriasContainer}>
         <FlatList
           data={categoriasApi}
           keyExtractor={(item) => item.id}
-          // style={{ borderWidth: 2 }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity
-                style={
-                  categoria === item? estilos.listadoActivo : estilos.listado
-                }
-                onPress={() => setCategoria(item)}
-              >
-                <Text style={categoria === item? estilos.textBoton : estilos.texto}>{item.name}</Text>
+              <TouchableOpacity onPress={() => setCategoria(item)}>
+                <LinearGradient 
+                    colors={categoria === item?colorB:colorA}
+                    start={{x:1,y:0}}
+                    end={{x:0,y:1}}
+                    style={styles.categorias}>    
+                  <Text style={categoria === item? {...styles.text,color:"white"}: styles.text}>{item.name}</Text>
+                </LinearGradient>
               </TouchableOpacity>
             );
           }}
         />
       </View>  
       {categoria ? (
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity
-            style={estilos.boton}
-            onPress={() => eliminarCategoria(categoria)}
-          >
-            <Text style = {estilos.textBoton}>Eliminar</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.deleteCategoria} onPress={() => eliminarCategoria(categoria)}>
+        <Icon  
+            size={iconSize}
+            colors={[
+                {color:"red",offset:"0",opacity:"1"},
+                {color:"black",offset:"1",opacity:"1"},
+            ]}
+            name="delete-forever" type="material-community" />  
+            <Text style={styles.textNavBar}>Eliminar</Text>
+        </TouchableOpacity>
+          
       ) : null}
-      <View style={estilos.contenedorInput}>
+      <View style={styles.contenedorInput}>
         <TextInput
-          style={estilos.inputTexto}
+          style={styles.textInput}
           placeholder="Escriba su nueva categoria aquí..."
           onChangeText={(e) => setText(e)}
           value={text}
         />
-      </View>
-      {/* <View style={estilos.containerBotones}>
-              <TouchableOpacity onPress={() => navigation.navigate("MenuProductos")} style={estilos.boton}><Text style={estilos.textBoton }>Salir</Text></TouchableOpacity>      
-              <TouchableOpacity onPress={() => agregarCategoria({name:text})} style={{...estilos.boton, backgroundColor: "green"}}><Text style={estilos.textBoton }>Agregar</Text></TouchableOpacity>
-     </View> */}
-     <View style={estilos.containerNavBar}>     
-              <TouchableOpacity onPress={() => navigation.navigate("MenuProductos")} style={estilos.botonNavBar}><LinearGradient  colors={[ '#ff7f49','#f23c3c', '#d20038']} style={{...estilos.botonNavBar,width: '100%'}}><Text style={estilos.textNavBar}>Salir</Text></LinearGradient></TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("MenuPrincipal")}style={estilos.botonNavBar}><LinearGradient  colors={[ '#54b2f5','#9fa5f1', '#dc92cf']} style={{...estilos.botonNavBar,width: '100%'}}><Icon name="home" size={35} color="white" /></LinearGradient></TouchableOpacity>
-              <TouchableOpacity onPress={() => agregarCategoria({name:text})}style={estilos.botonNavBar}><LinearGradient  colors={['#3cf23c', '#00dea1']} style={{...estilos.botonNavBar,width: '100%'}}><Text style={estilos.textNavBar }>Agregar</Text></LinearGradient></TouchableOpacity>
-            </View>
+      </View>  
+       {/* NavBar() -------------------------------------------*/}
+       <View style = {styles.containerNavBar}>   
+                            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuProductos")}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="delete-forever" type="material-community" />  
+                                    <Text style={styles.textNavBar}>Salir</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="home" type="material-community" />  
+                                    <Text style={styles.textNavBar}>Home</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttom} onPress={() => agregarCategoria({name:text})}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="content-save" type="material-community" />  
+                                    <Text style={styles.textNavBar} >Agregar</Text>
+                            </TouchableOpacity>
+        </View>   
     </View>
+    </LinearGradient>
+    
   );
 };
-
-const estilos = StyleSheet.create({
-  textNavBar : {
-    textAlign: "center",
+const styles = StyleSheet.create({
+  container:{
+    marginTop:25,
+    flex:1,
+    width:width, height:height,
+    alignItems:"center",
+  },
+  title:{
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',               
-} ,
-botonNavBar : {
-    width: '23%',
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
-    marginVertical: 10,
-    marginHorizontal: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-        width: 0,
-        height: 12,
-    },  shadowOpacity: 0.58,
-    shadowRadius: 16.00,
-    elevation: 24,
-    backgroundColor: "green",
-},
-containerNavBar: {
-    position: "absolute",
-    bottom: 0,
-    marginTop: "25%",
-    width: '100%',
-    height: 90,
-    backgroundColor: '#fff',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-},
-  container: {
-    
-    height: "100%",
-    display: "flex",
-    alignContent: "space-around",
+    marginTop: 20,
+    marginBottom:10,
   },
-  listado: {
-    marginHorizontal: 30,
-    margin: 1,
-    padding: 3,
-    backgroundColor: "#DBD7D7",
-    paddingVertical: 10,
-    
+  categoriasContainer:{
+    alignItems:"center",
+    width:width, 
+    height:height*0.6,
   },
-  listadoActivo: {
-    marginHorizontal: 30,
-    margin: 1,
-    padding: 3,
-    backgroundColor: "green",
-    paddingVertical: 10,
+  categorias:{
+    margin:5,
+    padding:5,
+    width:width*0.8,
+    borderRadius:15,
   },
-  texto:{
+  text:{
     textAlign: "center",
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'black',               
+    color: 'black',  
+    fontSize: 18,
+    fontWeight: 'bold',             
   },
   contenedorInput:{
-    position: "absolute",
     bottom: 10,
-    width: '100%',
-    height: "30%",
+    width:width,
+    height:height*0.16,
+    alignItems:"center",
   },
-  inputTexto: {
-    textAlign: "center",
-    marginHorizontal: 30,
-    fontSize: 18,
-    height: "100%",
-    backgroundColor: "#DBD7D7",
-    borderRadius: 9,
+  textInput:{
+    padding: 10,
+    paddingStart:30,
+    width:width*0.7,
+    height:50,
+    marginTop:20,
+    borderBottomWidth:2,
+    borderBottomColor:"#2C7DA0",
   },
-//   containerBotones: {
-//     position: "absolute",
-//     bottom: 0,
-//     marginTop: "25%",
-//     width: '100%',
-//     height: 90,
-//     backgroundColor: '#fff',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     flexDirection: 'row',
-// },
-  boton : {
-    width: '25%',
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
-    marginVertical: 10,
-    marginHorizontal: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-        width: 0,
-        height: 12,
+     /* NavBar() -------------------------------------*/
+    textNavBar : {
+      textAlign: "center",
+      fontSize: 14,
+      fontWeight: 'bold',
+      color: 'black',               
+    } ,
+    containerNavBar: {
+      position: "absolute",
+      bottom: -20,
+      width: '100%',
+      height: 70,
+      backgroundColor: '#fff',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      flexDirection: 'row',
     },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.00,
-    elevation: 24,
-    backgroundColor: "red",
-  },
-  botonEliminar: {
-    marginTop: 7,
-    backgroundColor: "#EF3E3E",
-    padding: 7,
-    width: 83,
-    marginBottom: 20,
-    alignItems: "center",
-    borderRadius: 4,
-  },
-  textBoton : {
-    textAlign: "center",
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',               
-  } ,
-});
-
+    /* Loading() -------------------------------------*/
+})

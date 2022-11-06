@@ -7,7 +7,13 @@ import ModificarVarios from './Buscar/ModificarVarios'
 import { LinearGradient } from 'expo-linear-gradient';
 const {width, height} = Dimensions.get('window');
 
-
+const Loading =()=>{
+  return (
+    <View style={[styles.Loading]}>
+      <ActivityIndicator size="large" />
+    </View>
+  )
+}
 const Productos = ({navigation}) => {
   const baseUrl = "https://admin-market-api.herokuapp.com" ;
   const [productosApi,setProductosApi]= useState(null)
@@ -102,13 +108,6 @@ const Productos = ({navigation}) => {
   }
   
   /////////////////////////////////////////////////////
-  const Loading =()=>{
-    return (
-      <View style={[styles.Loading]}>
-        <ActivityIndicator size="large" />
-      </View>
-    )
-  }
   
     return (
       <LinearGradient 

@@ -276,126 +276,7 @@ export default function AgregarUno({navigation}) {
            
 )
 }
-const estilos = StyleSheet.create({
-  textNavBar : {
-    textAlign: "center",
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',               
-} ,
-botonNavBar : {
-    width: '23%',
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
-    marginVertical: 10,
-    marginHorizontal: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-        width: 0,
-        height: 12,
-    },  shadowOpacity: 0.58,
-    shadowRadius: 16.00,
-    elevation: 24,
-    backgroundColor: "green",
-},
-containerNavBar: {
-    // position: "absolute",
-    bottom: 0,
-    marginTop: "25%",
-    width: '100%',
-    height: 90,
-    backgroundColor: '#fff',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-},
-  busqueda: {
-    padding: 10,
-    textAlign: "center",
-    borderRadius: 5,
-    width: 200,
-    elevation: 8,
-    borderWidth: 1,
-    backgroundColor: "white",
-  },
-  modal2:{
-    width: '100%',
-    justifyContent: 'space-around',
-    flexDirection: 'row',
-  },
-  modal:{
-    zIndex: 10,
-    marginTop: "30%",
-    position: "absolute",
-    width: '90%',
-    marginLeft: '5%',
-    height: 300,
-    backgroundColor: '#fff',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingHorizontal: 0,
-    elevation: 10,
-    flexDirection: 'column',
-  },
-  cotainerIcon: {
-    width: '90%',
-    marginLeft: '5%',
-    backgroundColor: '#fff',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 0,
-    elevation: 0,
-    flexDirection: 'row',
-  },
-  textTitle : {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'black',    
-    marginLeft: 50           
-  } ,
-  text : {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'black',    
-    marginLeft: 30           
-  } ,
-  textBoton : {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',               
-  } ,
-  boton : {
-    width: '25%',
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
-    marginVertical: 10,
-    marginHorizontal: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-        width: 0,
-        height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.00,
-    elevation: 24,
-    backgroundColor: "red",
-  },
-  container: {
-    marginTop: "25%",
-    width: '100%',
-    height: 90,
-    backgroundColor: '#fff',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 0,
-    elevation: 0,
-    flexDirection: 'row',
-}
-})
+
 const styles = StyleSheet.create({
   container:{
     flex:1,
@@ -439,6 +320,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   modalContainer:{
+    marginTop:25,
     zIndex: 10,
     width: width,
     height: height,

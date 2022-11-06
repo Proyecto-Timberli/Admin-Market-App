@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////
 import React, { useState } from "react";
-import { Dimensions, StyleSheet,TextInput,TouchableOpacity,View,Text,Modal, SafeAreaView} from "react-native";
+import { ActivityIndicator, Dimensions, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,Modal, SafeAreaView} from "react-native";
 ////////////////////////////////////////////////////
 import axios from 'axios'
 const baseUrl = "https://admin-market-api.herokuapp.com" ;
@@ -17,15 +17,42 @@ const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
 const iconColorA="#206593"
 const iconColorB="#25EADE"
 ////////////////////////////////////////////////////
+const Loading =()=>{
+    return (
+      <View style={[styles.Loading]}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+}
+function ModalLoading(){
+    return (
+      <View style={styles.modalContainer}>
+      <LinearGradient 
+        colors={colorA}
+        start={{x:1,y:0}}
+        end={{x:0,y:1}}
+        style={styles.modal}>
+      <Loading/>
+      </LinearGradient>
+      </View>
+    )
+}
 
 export default function ModificarVarios({estado,listaSeleccionados,setListaSeleccionados,listaCompleta,recargarLista,navigation}){
-    const [todos,setTodos]=useState(false)
-    const [visible,setVisible]=useState(false)
-    const [aumentar,setAumentar]=useState(true)
-    const [valor,setValor]=useState(0)
-
-    const [listaFinalGuardada,setListaFinalGuardada]=useState(null)
+    const [todos,setTodos]=useState(false)// check todos
+    const [visible,setVisible]=useState(false)// modal on o off
+    const [aumentar,setAumentar]=useState(true)// aumentar o bajar precios
+    const [valor,setValor]=useState(0)// valor input
+    const [listaFinalGuardada,setListaFinalGuardada]=useState(null)// lista modificada
+    const [loading,setLoading]=useState(false)// Loading al guardar cambios
     
+    function checkTodos(){
+        if (!todos){
+            setTodos(true)
+            setListaSeleccionados(listaCompleta)
+        }else{setTodos(false)
+            setListaSeleccionados([])}
+    }
     function listaFinal(){
         if(!valor){return}
         if(aumentar){
@@ -34,13 +61,6 @@ export default function ModificarVarios({estado,listaSeleccionados,setListaSelec
         if(!aumentar){ 
             return setListaFinalGuardada(listaSeleccionados.map(e=>e={...e,price:e.price-(e.price*(valor/100))}))
         }
-    }
-    function checkTodos(){
-        if (!todos){
-            setTodos(true)
-            setListaSeleccionados(listaCompleta)
-        }else{setTodos(false)
-            setListaSeleccionados([])}
     }
     const  putProductos= (productos)=>{
         axios.put(baseUrl+"/api/product",productos
@@ -52,12 +72,21 @@ export default function ModificarVarios({estado,listaSeleccionados,setListaSelec
             console.log(error);
         });
     }
+    function aplicar(){
+        if (!valor){return}
+        listaFinal()
+        setValor(0)
+        Alert.alert("Se aplicaron los cambios","Para confirmar los cambios presione el boton GUARDAR")
+        
+    }
     function salir(){
         setListaFinalGuardada(null)
         setValor(0)
         setVisible(false)
     }
     function guardar(){
+        if (!listaFinalGuardada){return}
+        setLoading(true)
         let productos = {products:listaFinalGuardada}
         setListaFinalGuardada(null)
         setValor(0)
@@ -65,9 +94,13 @@ export default function ModificarVarios({estado,listaSeleccionados,setListaSelec
         setTimeout(() => {recargarLista()
             setTodos(false)
             setListaSeleccionados([])
-           setVisible(false)}, 1000);
+            setLoading(false)
+            setVisible(false)
+           Alert.alert("Cambios guardados")}, 1000);
+
     }
-    
+
+  
     return(
         <View style={styles.container}>
             {/* todos check() -------------------------------------*/}
@@ -95,6 +128,7 @@ export default function ModificarVarios({estado,listaSeleccionados,setListaSelec
                 </TouchableOpacity>
             </LinearGradient>}
             <Modal visible={visible} animationType="slide">
+            {loading&&<ModalLoading/>}
             <LinearGradient 
                 colors={colorBackgroundModal}
                 start={{x:1,y:0}}
@@ -141,7 +175,7 @@ export default function ModificarVarios({estado,listaSeleccionados,setListaSelec
                             </TouchableOpacity>
                         </View>
                         {/* button Aplicar() -------------------------------------*/}
-                        <TouchableOpacity onPress={()=> listaFinal()} style={styles.botonAplicar}>
+                        <TouchableOpacity onPress={()=> aplicar()} style={styles.botonAplicar}>
                             <LinearGradient 
                                     colors={!valor?colorA:colorB}
                                     start={{x:1,y:0}}
@@ -292,5 +326,30 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
     },
+    /* Loading() -------------------------------------*/
+    Loading: {
+        flex: 1,
+        justifyContent: "center"
+    },
+    modalContainer:{
+        zIndex: 10,
+        width: width,
+        height: height,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modal:{
+        zIndex: 10,
+        marginTop: "60%",
+        position: "absolute",
+        width: '90%',
+        marginLeft: '5%',
+        height: "30%",
+        backgroundColor: 'black',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        paddingHorizontal: 0,
+        elevation: 10,
+        flexDirection: 'column',
+      },
 
 })

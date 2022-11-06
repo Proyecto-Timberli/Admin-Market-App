@@ -334,6 +334,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   modalContainer:{
+    marginTop:25,
     zIndex: 10,
     width: width,
     height: height,
