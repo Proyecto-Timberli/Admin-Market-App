@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { TextInput, StyleSheet, Text, View, Dimensions, TouchableOpacity} from 'react-native';
 import Svg, {Path, Defs, LinearGradient, Stop} from 'react-native-svg';
-import {ButtonLogin} from './Button'
-import {ButtonLoginGoogle} from './Button'
+import {ButtonRegister} from './Button'
 import {useAuth} from '../../context/authContext'
-
 const {width, height} = Dimensions.get('window');
 
-function Login({navigation}){
+function Register({navigation}){
     const SvgComponent = () => (
         <Svg
           width={408}
@@ -39,8 +37,6 @@ function Login({navigation}){
         </Svg>
     )
     //////////////////////////////////////////////////////////////
-    const {user} = useAuth()
-    //////////////////////////////////////////////////////////////
     const initalState = {
       email: "",
       password: "",
@@ -51,42 +47,27 @@ function Login({navigation}){
     const handleChangeText = (value, name) => {
       setState({ ...state, [name]: value });
     };
-    const {login, loginWithGoogle} = useAuth()
+    const {signup} = useAuth()
     const handleSubmit = async () => {
       try{
-        await login(state.email, state.password)
-        navigation.navigate("Home")
+        await signup(state.email, state.password)
+        navigation.navigate("Login")
       }
       catch(error){
         console.log(error.message)
       }
       
     };
-    const handleGoogleLogin = async () => {
-      try{
-        await loginWithGoogle()
-        navigation.navigate("Home")
-      }
-      catch(error){
-        console.log(error.message)
-      }
-    }
-  /////////Protected Screen
-  if (user){
-      return navigation.navigate("MenuPrincipal")
-  }
-  /////////Protected Screen
     return (
         <View style={styles.container}> 
             <SvgComponent style={styles.containerSVG}/>
             <Text style={styles.title}>Hola!</Text>
-            <Text style={styles.subTitle}>Logea con tu cuenta</Text>
+            <Text style={styles.subTitle}>Registra tu cuenta</Text>
             <TextInput value={state.email} style={styles.textInput} placeholder="Ingresa un mail" onChangeText={(value) => handleChangeText(value, "email")}></TextInput>
             <TextInput value={state.password} secureTextEntry={true} style={styles.textInput} placeholder="Ingresa una contraseña" onChangeText={(value) => handleChangeText(value, "password")}></TextInput>
-            <ButtonLogin onPress={handleSubmit}/>
-            <ButtonLoginGoogle onPress={handleGoogleLogin}/>
-
-            <TouchableOpacity onPress={()=>navigation.navigate("Register")}><Text style={styles.subTitle2}>no tengo cuenta</Text></TouchableOpacity>
+            <TextInput secureTextEntry={true} style={styles.textInput} placeholder="repita su contraseña"></TextInput>
+            <ButtonRegister onPress={handleSubmit}/>
+            <TouchableOpacity onPress={()=>navigation.navigate("Login")}><Text style={styles.subTitle2}>Ya tengo cuenta</Text></TouchableOpacity>
         </View>
     )
 }
@@ -94,6 +75,8 @@ function Login({navigation}){
 
 const styles= StyleSheet.create({
     container:{
+        width:width,
+        height:height,
         flex:1,
         alignItems:"center",
         backgroundColor:"#f1f1f1",
@@ -127,4 +110,4 @@ const styles= StyleSheet.create({
         color:"gray",
     },
 })
-export default Login;
+export default Register;

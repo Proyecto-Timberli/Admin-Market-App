@@ -4,7 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Icon } from 'react-native-gradient-icon';
 import {View,Text,TouchableOpacity,StyleSheet,Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-//screens
+
+import {AuthProvider, } from '../context/authContext'
 //-----------------------Productos------------------------------------
 import MenuProductos from "./Productos/MenuProductos";
 import Productos from './Productos/Productos'
@@ -18,7 +19,16 @@ import Ventas from './Cobrar/Ventas'
 import VentaResumen from './Cobrar/VentaResumen'
 //-----------------------cuenta------------------------------------
 import MenuCuenta from "./Cuenta/MenuCuenta";
-import Login from './Login/Login'
+// Components
+import Register from "./Login/Register";
+import Login from "./Login/Login";
+import Cuenta from "./Cuenta/firestore"
+import Customers from './Clientes/Customers'
+import InformationClient from './Clientes/Client-Edit-Info'
+import AddClient from './Clientes/Add-Client'
+import Providers from './Provedores/Providers'
+import AddProvider from './Provedores/Add-Provider'
+import InformationProvider from './Provedores/Provider-Edit-Info'
 
 const {width, height} = Dimensions.get('window');
 const Stack = createNativeStackNavigator();
@@ -64,7 +74,7 @@ function MenuPrincipal(){
             </TouchableOpacity>
             </View>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuCuenta")}>
+            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Customers")}>
                 <Icon  
                     size={iconSize}
                     colors={[
@@ -76,7 +86,7 @@ function MenuPrincipal(){
             </TouchableOpacity>
             </View>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuCuenta")}>
+            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Providers")}>
                 <Icon  
                     size={iconSize}
                     colors={[
@@ -88,7 +98,7 @@ function MenuPrincipal(){
             </TouchableOpacity>
             </View>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Login")}>
+            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Cuenta")}>
                 <Icon  
                     size={iconSize}
                     colors={[
@@ -108,12 +118,14 @@ export default function MenuMain(){
     
     return( 
         <NavigationContainer>  
-            <Stack.Navigator initialRouteName="MenuPrincipal"
+            <AuthProvider>
+            {/* <Stack.Navigator initialRouteName="MenuPrincipal" */}
+            <Stack.Navigator initialRouteName="Login"
                 screenOptions={{
                     headerShown: false,
                 }}>
                <Stack.Screen name="MenuPrincipal" component={MenuPrincipal}/>
-                <Stack.Screen name="MenuCuenta" component={MenuCuenta}/>
+                <Stack.Screen name="Cuenta" component={Cuenta}/>
                 <Stack.Screen name="MenuProductos" component={MenuProductos}/>
                 <Stack.Screen name="MenuCobrar" component={MenuCobrar}/>
                 {/* //-----------------------MenuProductos------------------------------------ */}
@@ -126,8 +138,37 @@ export default function MenuMain(){
                 <Stack.Screen name="Ventas" component={Ventas}/>
                 <Stack.Screen name="VentaResumen" component={VentaResumen}/>
                 {/* //-----------------------Cuenta------------------------------------ */}
-                <Stack.Screen name="Login" component={Login}/>
+                <Stack.Screen name="Login" component={Login}/> 
+                <Stack.Screen
+                name="Register"
+                component={Register}
+                />
+                <Stack.Screen
+                name="Customers"
+                component={Customers}
+                />
+                <Stack.Screen
+                name="Client-info"
+                component={InformationClient}
+                />
+                <Stack.Screen
+                name="Add-client"
+                component={AddClient}
+                />
+                <Stack.Screen
+                name="Providers"
+                component={Providers}
+                />
+                <Stack.Screen
+                name="Add-providers"
+                component={AddProvider}
+                />
+                <Stack.Screen
+                name="Provider-info"
+                component={InformationProvider}
+                />
             </Stack.Navigator>
+            </AuthProvider>
         </NavigationContainer>
     )
 }

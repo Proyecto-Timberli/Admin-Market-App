@@ -1,7 +1,18 @@
 import React , {useEffect, useState} from "react";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Dimensions, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+////////////////////////////////////////////////////
+import { LinearGradient } from 'expo-linear-gradient';
+const {width, height} = Dimensions.get('window');
+////////////////////Colors//////////////////////////
+const iconSize= 50;
+const colorA = [ '#F8E9E9','#B9C7CA'] 
+const colorB =[ '#206593','#25EADE']
+const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
+const iconColorA="#206593"
+const iconColorB="#25EADE"
+////////////////////////////////////////////////////
 const CardProducto = (
   {id,nombre, categoria, precio,product,shopingCart,shopingCartSave,setShopingCart,venta,setVenta})=>{
   const navigation = useNavigation();
@@ -62,17 +73,24 @@ const CardProducto = (
     }
     return (
       <>
-        <View
+        <LinearGradient 
+          colors={colorA}
+          start={{x:1,y:0}}
+          end={{x:0,y:1}}
           style={estilo.lista}>
           <Text style={estilo.texto1}>{nombre}</Text>
           <Text style={estilo.texto2}>{categoria}</Text>
           <Text style={estilo.texto3}>{precio} </Text>
-        </View>
-        <View style={estilo.listaCart}> 
+        </LinearGradient >
+        <LinearGradient 
+          colors={colorB}
+          start={{x:1,y:0}}
+          end={{x:0,y:1}} 
+          style={estilo.listaCart}> 
           <TouchableOpacity onPress={()=>remove()}><Icon name="cart-remove" size={26} color={'white'}/></TouchableOpacity>
             <Text style={{color:'white'}}>Cantidad: {cantidad}</Text>
           <TouchableOpacity onPress={()=>add()}><Icon name="cart-plus" size={26} color={'white'}/></TouchableOpacity>
-        </View>
+        </LinearGradient>
       </>
     );
   
@@ -82,10 +100,10 @@ const CardProducto = (
 
 let estilo = StyleSheet.create({
   listaCart: {
+    width:width*0.9,
     flex: 1,
-    backgroundColor: "green",
     marginTop:0,
-    marginBottom:5,
+    marginBottom:10,
     elevation: 1,
     flexDirection: "row",
     height: 40,
@@ -94,9 +112,9 @@ let estilo = StyleSheet.create({
     justifyContent:"space-around",
 },
   lista: {
+    width:width*0.9,
     flex: 1,
     backgroundColor: "#F8E9E9",
-    margin: 5,
     elevation: 1,
     flexDirection: "row",
     alignItems: "center",

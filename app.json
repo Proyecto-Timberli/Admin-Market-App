@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "prueba-app-native",
-    "slug": "prueba-app-native",
+    "owner":"gordoancestral",
+    "name": "business-admin",
+    "slug": "business-admin",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,9 +19,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier":"com.Timberli.businessAdmin"
     },
     "android": {
+      "package":"com.Timberli.businessAdmin",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

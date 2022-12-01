@@ -1,9 +1,29 @@
-import React,{ useEffect, useState} from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { LinearGradient } from 'expo-linear-gradient';
-import {View,Text,TextInput,FlatList,TouchableOpacity,StyleSheet,Modal,SafeAreaView } from 'react-native';
-import CardProducto from './Card-Product-In-Cart'
+////////////////////////////////////////////////////
+import React, {useEffect, useState } from "react";
+import {ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,} from "react-native";
+////////////////////////////////////////////////////
 import axios from 'axios'
+const baseUrl = "https://admin-market-api.herokuapp.com" ;
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Icon } from 'react-native-gradient-icon';
+import { LinearGradient } from 'expo-linear-gradient';
+const {width, height} = Dimensions.get('window');
+////////////////////Colors//////////////////////////
+const iconSize= 50;
+const colorA = [ '#F8E9E9','#B9C7CA'] 
+const colorB =[ '#206593','#25EADE']
+const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
+const iconColorA="#206593"
+const iconColorB="#25EADE"
+////////////////////////////////////////////////////
+import CardProducto from './Card-Product-In-Cart'
+// import React,{ useEffect, useState} from 'react';
+// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+// import { LinearGradient } from 'expo-linear-gradient';
+// import {View,Text,TextInput,FlatList,TouchableOpacity,StyleSheet,Modal,SafeAreaView } from 'react-native';
+// import axios from 'axios'
 export default function MenuCobrar({route,navigation}){
     /////////////////////////////////////////////////////
     function existe(arrayDeObjetos,atributo,valor){
@@ -40,7 +60,6 @@ export default function MenuCobrar({route,navigation}){
         venta?.forEach(producto => value=(value+(producto.ammount*producto.price)));
         setTotal(value)
     }
-    const baseUrl = "https://admin-market-api.herokuapp.com" ;
     const  putProductos= (productos)=>{
         axios.put(baseUrl+"/api/product",productos
         )
@@ -78,12 +97,24 @@ export default function MenuCobrar({route,navigation}){
     /////////////////////////////////////////////////////
     /////////////////////////////////////////////////////
     return(
-        <View style={{flex: 1}}>
-            <TouchableOpacity onPress={() => navigation.navigate("BucarProductos")} style={estilos.boton}><Icon name="plus-box" size={26} color={'white'}/></TouchableOpacity>
-           <FlatList
-                data={shopingCart}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => {
+        <LinearGradient 
+            colors={colorBackgroundModal}
+            start={{x:1,y:0}}
+            end={{x:0,y:1}}
+            style={{width:width,height:height}}>
+           <View style={styles.container}>
+                <TouchableOpacity onPress={() => navigation.navigate("BucarProductos")} style={styles.botonPosition} >
+                    <LinearGradient 
+                    colors={colorB}
+                    start={{x:1,y:0}}
+                    end={{x:0,y:1}} 
+                    style={styles.boton}><Icons name="plus-box" size={26} color={'white'}/>
+                    </LinearGradient>
+                </TouchableOpacity>
+                <FlatList
+                    data={shopingCart}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => {
                     return (
                         <View>    
                             <CardProducto
@@ -104,104 +135,76 @@ export default function MenuCobrar({route,navigation}){
                     );
                 }}
             />
-             <View style={{height:30,flexDirection: "row",justifyContent:"space-around",}}>
-                <View style={{width: '35%',}}><Text style={estilos.text}>Total</Text></View>
-                <View style={{width: '35%',}}><Text style={estilos.text}>{total}</Text></View>
-            </View>
-            <View style={{height:270,flexDirection: "row",justifyContent:"space-around",backgroundColor: "green"}}>
+             <LinearGradient 
+                    colors={colorB}
+                    start={{x:1,y:0}}
+                    end={{x:0,y:1}} style={{height:height*0.04,flexDirection: "row",justifyContent:"space-around",}}>
+                <View style={{width: '35%',}}><Text style={styles.text}>Total</Text></View>
+                <View style={{width: '35%',}}><Text style={styles.text}>{total}</Text></View>
+            </LinearGradient >
+            <View style={{height:height*0.36,flexDirection: "row",justifyContent:"space-around",backgroundColor: "green"}}>
                
             </View>
-            {/* <View style={estilos.containerBotones}>
-              <TouchableOpacity onPress={() => console.log("s")} style={estilos.boton2}><Text style={estilos.textBoton2 }>Limpiar</Text></TouchableOpacity>      
-              <TouchableOpacity onPress={()=> registar(venta, shopingCart)} style={estilos.boton2}><Text style={estilos.textBoton2 }>Registrar</Text></TouchableOpacity>
-            </View> */}
-            <View style={estilos.containerNavBar}>     
-                <TouchableOpacity onPress={() => console.log("s")} style={estilos.botonNavBar}><LinearGradient  colors={[ '#ff7f49','#f23c3c', '#d20038']} style={{...estilos.botonNavBar,width: '100%'}}><Text style={estilos.textNavBar}>Limpiar</Text></LinearGradient></TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("MenuPrincipal")}style={estilos.botonNavBar}><LinearGradient  colors={[ '#54b2f5','#9fa5f1', '#dc92cf']} style={{...estilos.botonNavBar,width: '100%'}}><Icon name="home" size={35} color="white" /></LinearGradient></TouchableOpacity>
-                <TouchableOpacity onPress={()=> registar(venta, shopingCart)}style={estilos.botonNavBar}><LinearGradient  colors={['#3cf23c', '#00dea1']} style={{...estilos.botonNavBar,width: '100%'}}><Text style={estilos.textNavBar }>Registrar</Text></LinearGradient></TouchableOpacity>
-            </View>
-        </View>
+            {/* NavBar() -------------------------------------------*/}
+                    <View style = {styles.containerNavBar}>   
+                            <TouchableOpacity style={styles.buttom} onPress={() => console.log("Limpiar")}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="delete-forever" type="material-community" />  
+                                    <Text style={styles.textNavBar}>Limpiar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="home" type="material-community" />  
+                                    <Text style={styles.textNavBar}>Home</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttom} onPress={()=> registar(venta, shopingCart)}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="content-save" type="material-community" />  
+                                    <Text style={styles.textNavBar} >Registrar</Text>
+                            </TouchableOpacity>
+                    </View> 
+               </View>  
+        </LinearGradient>
     );
 }
-const estilos = StyleSheet.create({
-    textNavBar : {
-        textAlign: "center",
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#fff',               
-    } ,
-      botonNavBar : {
-        width: '23%',
-        height: 50,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 10,
-        marginVertical: 10,
-        marginHorizontal: 20,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 12,
-        },  shadowOpacity: 0.58,
-        shadowRadius: 16.00,
-        elevation: 24,
-        backgroundColor: "green",
-    },
-      containerNavBar: {
-        position: "absolute",
-        bottom: 0,
-        marginTop: "25%",
-        width: '100%',
-        height: 90,
-        backgroundColor: '#fff',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
-    // textBoton2 : {
-    //     textAlign: "center",
-    //     fontSize: 20,
-    //     fontWeight: 'bold',
-    //     color: '#fff',               
-    // } ,
-    // boton2 : {
-    //     width: '25%',
-    //     height: 50,
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    //     borderRadius: 10,
-    //     marginVertical: 10,
-    //     marginHorizontal: 20,
-    //     shadowColor: "#000",
-    //     shadowOffset: {
-    //         width: 0,
-    //         height: 12,
-    //     },  shadowOpacity: 0.58,
-    //     shadowRadius: 16.00,
-    //     elevation: 24,
-    //     backgroundColor: "green",
-    // },
-    // containerBotones: {
-    //     position: "absolute",
-    //     bottom: 0,
-    //     marginTop: "25%",
-    //     width: '100%',
-    //     height: 90,
-    //     backgroundColor: '#fff',
-    //     justifyContent: 'space-between',
-    //     alignItems: 'center',
-    //     flexDirection: 'row',
-    // },
+const styles = StyleSheet.create({
+    container:{
+        marginTop:25,
+        flex:1,
+        width:width, height:height,
+        alignItems:"center",
+      },
     contenedorBtonones: {
         width:"100%",
         flexDirection: "row",
         justifyContent: "space-around",  
     },
-    boton:{
-        position: "absolute",
+    botonPosition:{
         zIndex:1,
-        width: '15%',
-        height: 45,
+        position: "absolute",
+        bottom: height*0.30,
+        right: width*0.1,
+        width: width*0.15,
+        height: height*0.07,
+    },
+    boton:{
+        width: width*0.15,
+        height: height*0.07,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 10,
@@ -216,15 +219,32 @@ const estilos = StyleSheet.create({
         shadowRadius: 16.00,
         elevation: 24,
         backgroundColor: "aqua",
-        right: 76,
-        bottom: "39%",
+        
+        
     },
     text:{
         fontSize: 20,
         fontWeight: 'bold',
-        color: 'black',   
+        color: 'white',   
         textAlign:"center",            
     },
+         /* NavBar() -------------------------------------*/
+         textNavBar : {
+            textAlign: "center",
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: 'black',               
+          } ,
+          containerNavBar: {
+            position: "absolute",
+            bottom: -20,
+            width: '100%',
+            height: 70,
+            backgroundColor: '#fff',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            flexDirection: 'row',
+          },
 
 
 })

@@ -1,8 +1,23 @@
-import React , {useEffect, useState} from "react";
-import { StyleSheet, Alert, Text, View, TouchableOpacity ,FlatList} from "react-native";
+////////////////////////////////////////////////////
+import React, {useEffect, useState } from "react";
+import {ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,} from "react-native";
+////////////////////////////////////////////////////
 import axios from 'axios'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+const baseUrl = "https://admin-market-api.herokuapp.com" ;
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
+const {width, height} = Dimensions.get('window');
+////////////////////Colors//////////////////////////
+const iconSize= 50;
+const colorA = [ '#F8E9E9','#B9C7CA'] 
+const colorB =[ '#206593','#25EADE']
+const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
+const iconColorA="#206593"
+const iconColorB="#25EADE"
+////////////////////////////////////////////////////
 const VentaResumen = ({route,navigation})=>{
   /////////////////////////////////////////////////////////
   const {id,resumen,fecha,total}=route.params
@@ -26,104 +41,140 @@ const VentaResumen = ({route,navigation})=>{
     navigation.navigate("MenuPrincipal")
   }
     return (
-        <>
-            <View style={{flex: 1}}>
-                <View style={estilo.lista}>
-                    <Text style={estilo.texto4}>Nro de venta: {id}</Text>
-                    <Text style={estilo.texto4}>Fecha: {fecha} </Text>
-                </View>
-                <View style={{height:670}}>
+        
+          <LinearGradient 
+              colors={colorBackgroundModal}
+              start={{x:1,y:0}}
+              end={{x:0,y:1}}
+              style={{width:width,height:height}}>
+            <View style={styles.container}>
+                <LinearGradient 
+                            colors={colorA}
+                            start={{x:1,y:0}}
+                            end={{x:0,y:1}} 
+                            style={styles.lista}>
+                    <Text style={styles.text}>Nro de venta: {id}</Text>
+                    <Text style={styles.text}>Fecha: {fecha} </Text>
+                </LinearGradient >
+                <View style={{alignItems:"center", width:width, height:height*0.7}}>
                 <FlatList
                     data={data}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => {
                         return (
-                                <View style={estilo.lista2}>
-                                    <Text style={estilo.texto4}>{item.name}</Text>
-                                    <Text style={estilo.texto4}>{item.price}</Text>
-                                    <Text style={estilo.texto4}>Cantidad: {item.ammount}</Text>
-                                    <Text style={estilo.texto4}>{item.price*item.ammount}</Text>
-                                </View>            
+                          <LinearGradient 
+                            colors={colorA}
+                            start={{x:1,y:0}}
+                            end={{x:0,y:1}} 
+                            style={styles.lista2}>
+                                    <Text style={styles.texto4}>{item.name}</Text>
+                                    <Text style={styles.texto4}>{item.price}</Text>
+                                    <Text style={styles.texto4}>Cantidad: {item.ammount}</Text>
+                                    <Text style={styles.texto4}>{item.price*item.ammount}</Text>
+                          </LinearGradient >            
                         );
                     }}
                 />
-                <View style={{height:150}}>
-                  <Text style={estilo.texto1}>Total: {total}</Text>
-                </View>
-                <View style={estilo.containerNavBar}>     
-                  <TouchableOpacity onPress={() => anular()} style={estilo.botonNavBar}><LinearGradient  colors={[ '#ff7f49','#f23c3c', '#d20038']} style={{...estilo.botonNavBar,width: '100%'}}><Text style={estilo.textNavBar}>Anular</Text></LinearGradient></TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate("MenuPrincipal")}style={estilo.botonNavBar}><LinearGradient  colors={[ '#54b2f5','#9fa5f1', '#dc92cf']} style={{...estilo.botonNavBar,width: '100%'}}><Icon name="home" size={35} color="white" /></LinearGradient></TouchableOpacity>
-                  <TouchableOpacity onPress={() => console.log("comprobante")}style={estilo.botonNavBar}><LinearGradient  colors={['#3cf23c', '#00dea1']} style={{...estilo.botonNavBar,width: '100%'}}><Text style={estilo.textNavBar }>Resumen</Text></LinearGradient></TouchableOpacity>
-                </View>
+                <LinearGradient 
+                    colors={colorA}
+                    start={{x:1,y:0}}
+                    end={{x:0,y:1}} style={{width:width*0.5, height:height*0.04,flexDirection: "row",justifyContent:"space-around",}}>
+                  <Text style={styles.textTotal}>Total:     {total}</Text>
+                </LinearGradient>
+            
             </View>
+                   {/* NavBar() -------------------------------------------*/}
+                   <View style = {styles.containerNavBar}>   
+                        <TouchableOpacity style={styles.buttom} onPress={() => anular()}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="delete-forever" type="material-community" />  
+                                    <Text style={styles.textNavBar}>Anular</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="home" type="material-community" />  
+                                    <Text style={styles.textNavBar}>Home</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttom} onPress={() => console.log("comprobante")}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="content-save" type="material-community" />  
+                                    <Text style={styles.textNavBar} >Resumen</Text>
+                        </TouchableOpacity>
+                </View> 
             </View>  
-        </>
+            </LinearGradient>
+        
     );
 };
   
-  let estilo = StyleSheet.create({
-    textNavBar : {
-      textAlign: "center",
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: '#fff',               
-  } ,
-    botonNavBar : {
-      width: '23%',
-      height: 50,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: 10,
-      marginVertical: 10,
-      marginHorizontal: 20,
-      shadowColor: "#000",
-      shadowOffset: {
-          width: 0,
-          height: 12,
-      },  shadowOpacity: 0.58,
-      shadowRadius: 16.00,
-      elevation: 24,
-      backgroundColor: "green",
-  },
-    containerNavBar: {
-      position: "absolute",
-      bottom: 0,
-      marginTop: "25%",
-      width: '100%',
-      height: 90,
-      backgroundColor: '#fff',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      flexDirection: 'row',
-  },
-    lista2: {
-      flex: 1,
-      backgroundColor: "#F8E9E9",
-      margin: 5,
-      elevation: 1,
-      flexDirection: "row",
-      alignItems: "center",
-      padding: 10,
-      justifyContent: 'space-between',
-    },
 
+  const styles = StyleSheet.create({
+    container:{
+      flex:1,
+      alignItems: "center",
+    },
+    
     lista: {
-      height:60,
+      width:width*0.9,
+      marginTop:30,
+      marginBottom: 20,
+      height:height*0.1,
       backgroundColor: "#F8E9E9",
-      margin: 5,
-      elevation: 1,
       flexDirection: "column",
       alignItems: "center",
-      padding: 10,
+      justifyContent: "center",
     },
-    texto1: { 
-      textAlign: "right",
-      marginRight:30,
-      marginTop:13,
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: 'black',      },
-    texto4: { color: "black"},
-  });
+      lista2: {
+      flex: 1,
+      width: width*0.9,
+      marginBottom: 5,
+      padding: 10,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: 'space-between',
+    },
+    text: { color: "black"},
+    textTotal:{
+      color: "black",
+      fontSize: 18,
+    },
+
+  
+      /* NavBar() -------------------------------------*/
+         textNavBar : {
+            textAlign: "center",
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: 'black',               
+          } ,
+          containerNavBar: {
+            position: "absolute",
+            bottom: -20,
+            width: '100%',
+            height: 70,
+            backgroundColor: '#fff',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            flexDirection: 'row',
+          },
+    
+  
+})
+
   
   export default VentaResumen;

@@ -1,13 +1,34 @@
-import React,{ useEffect, useState} from 'react';
-import axios from 'axios';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {View,Button,Text,TextInput,FlatList,TouchableOpacity,StyleSheet,Modal,SafeAreaView } from 'react-native';
+////////////////////////////////////////////////////
+import React, {useEffect, useState } from "react";
+import {ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,} from "react-native";
+////////////////////////////////////////////////////
+import axios from 'axios'
+const baseUrl = "https://admin-market-api.herokuapp.com" ;
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Icon } from 'react-native-gradient-icon';
+import { LinearGradient } from 'expo-linear-gradient';
+const {width, height} = Dimensions.get('window');
+////////////////////Colors//////////////////////////
+const iconSize= 50;
+const colorA = [ '#F8E9E9','#B9C7CA'] 
+const colorB =[ '#206593','#25EADE']
+const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
+const iconColorA="#206593"
+const iconColorB="#25EADE"
+////////////////////////////////////////////////////
 import CardProducto from './Card-Producto-Cobrar'
 import CategoriesSelect from './../Productos/Buscar/FIltro Categorias/FiltroCategorias'
-
+const Loading =()=>{
+    return (
+      <View style={[styles.Loading]}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
 export default function BucarProductos({ route, navigation }){
-    /////////////////////////////////////////////////////
-   
+    ///////////////////////////////////////////////////// 
     /////////////////////////////////////////////////////
     const baseUrl = "https://admin-market-api.herokuapp.com" ;
     const [productosApi,setProductosApi]= useState(null)
@@ -73,17 +94,22 @@ export default function BucarProductos({ route, navigation }){
    /////////////////////////////////////////////////////
    /////////////////////////////////////////////////////
     return(
-        <View style={estilos.lista}>      
-            <View style={estilos.caja}>
-                <TextInput
-                    style={estilos.busqueda}
-                    onChangeText={(e) => filtroBusqueda(e)}
-                    value={filterBySearch}
-                    placeholder="Buscar..."
-                />
-                <CategoriesSelect filtrar={filtroCategory}/>
-                        
-            </View>
+        <LinearGradient 
+        colors={[ '#F1F4F4','#DADEDF']}
+        start={{x:1,y:0}}
+        end={{x:0,y:1}}
+        style={{width:width,height:height}}>
+       <View style={styles.container}>
+          <View style={styles.caja}>
+            <TextInput
+            style={styles.textInput}
+            onChangeText={(e) => filtroBusqueda(e)}
+            value={filterBySearch}
+            placeholder="Buscar..."
+            />
+            <CategoriesSelect filtrar={filtroCategory}/>
+          </View>
+          {!productosApi?<Loading/>:
             <FlatList
                 data={arrayAMostrar}
                 keyExtractor={(item) => item.id}
@@ -103,50 +129,33 @@ export default function BucarProductos({ route, navigation }){
                         // </TouchableOpacity>
                     );
                 }}
-            />
-            <Button title="Go back" onPress={() => navigation.goBack()} />
-        </View>                               
+            />}
+        </View>  
+        </LinearGradient>                             
     );
 }
-const estilos = StyleSheet.create({
-    boton:{
-        marginLeft:'10%',
-        width: '40%',
-        height: 50,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 10,
-        marginVertical: 15,
-        marginHorizontal: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 12,
-        },
-        shadowOpacity: 0.58,
-        shadowRadius: 16.00,
-        elevation: 24,
-        backgroundColor: "aqua",
+const styles = StyleSheet.create({
+    container:{
+      flex:1,
+      alignItems:"center",
     },
-    text:{
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'black',               
+    caja:{
+      width:width,
+      paddingTop:30,
+      alignItems:"center",
     },
-    lista: { flex: 1, alignItems: "center", marginTop: 40 },
-    caja: {
-        elevation: 7,
-        alignItems: "center",
-        justifyContent: "center",
-        alignContent: "center",
+    textInput:{
+      padding: 10,
+      paddingStart:30,
+      width:width*0.5,
+      height:50,
+      marginTop:20,
+      borderRadius:30,
+      backgroundColor:"#fff",
     },
-    busqueda: {
-        padding: 10,
-        textAlign: "center",
-        borderRadius: 5,
-        width: 200,
-        elevation: 8,
-        borderWidth: 1,
-        backgroundColor: "white",
+    Loading: {
+      flex: 1,
+      justifyContent: "center"
     },
+  
 })

@@ -1,38 +1,37 @@
-import React , {useEffect, useState} from "react";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React , {useState} from "react";
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Dimensions, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
+const {width, height} = Dimensions.get('window');
+////////////////////Colors//////////////////////////
+const iconSize= 50;
+const colorA = [ '#F8E9E9','#B9C7CA'] 
+const colorB =[ '#206593','#25EADE']
+const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
+const iconColorA="#206593"
+const iconColorB="#25EADE"
+////////////////////////////////////////////////////
 
 
-const CardProducto = ({id,total,fecha,resumen})=>{
+const CardVenta = ({id,total,fecha,resumen})=>{
     const navigation = useNavigation();
     return (
-        <>
-           
-                <View style={estilo.lista}>
-                    <Text style={estilo.texto1}>{id}</Text>
-                    <Text style={estilo.texto2}>{total}</Text>
-                    <Text style={estilo.texto3}>{fecha} </Text>
-                </View>
-            
-            
+        <> 
+          <LinearGradient 
+          colors={colorA}
+          start={{x:1,y:0}}
+          end={{x:0,y:1}}
+          style={styles.lista}>
+                    <Text style={styles.texto1}>{id}</Text>
+                    <Text style={styles.texto2}>{total}</Text>
+                    <Text style={styles.texto3}>{fecha} </Text>
+          </LinearGradient>
         </>
     );
 };
   
-  let estilo = StyleSheet.create({
-    listaCart: {
-      flex: 1,
-      backgroundColor: "green",
-      marginTop:0,
-      marginBottom:5,
-      elevation: 1,
-      flexDirection: "row",
-      height: 40,
-      alignItems: "center",
-      padding: 10,
-      justifyContent:"space-around",
-  },
+  let styles = StyleSheet.create({
     lista: {
       flex: 1,
       backgroundColor: "#F8E9E9",
@@ -48,4 +47,4 @@ const CardProducto = ({id,total,fecha,resumen})=>{
     texto3: { color: "black", textAlign: "right", width: "30%" },
   });
   
-  export default CardProducto;
+  export default CardVenta;

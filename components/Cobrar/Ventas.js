@@ -1,9 +1,31 @@
-import React,{ useEffect, useState} from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { LinearGradient } from 'expo-linear-gradient';
-import {View,Text,TextInput,FlatList,TouchableOpacity,StyleSheet,Modal,SafeAreaView } from 'react-native';
-import CardVenta from './CardVenta'
+////////////////////////////////////////////////////
+import React, {useEffect, useState } from "react";
+import {ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,} from "react-native";
+////////////////////////////////////////////////////
 import axios from 'axios'
+const baseUrl = "https://admin-market-api.herokuapp.com" ;
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Icon } from 'react-native-gradient-icon';
+import { LinearGradient } from 'expo-linear-gradient';
+const {width, height} = Dimensions.get('window');
+////////////////////Colors//////////////////////////
+const iconSize= 50;
+const colorA = [ '#F8E9E9','#B9C7CA'] 
+const colorB =[ '#206593','#25EADE']
+const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
+const iconColorA="#206593"
+const iconColorB="#25EADE"
+////////////////////////////////////////////////////
+import CardVenta from './CardVenta'
+const Loading =()=>{
+    return (
+      <View style={[styles.Loading]}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
 export default function Ventas({route,navigation}){
     const [ventas,setVentas]=useState(null)
     const baseUrl = "https://admin-market-api.herokuapp.com" ;
@@ -17,6 +39,11 @@ export default function Ventas({route,navigation}){
           console.log(error);
         });
     }
+    // const getVentas =  ()=>{
+    //   const selectedC = collection(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/sales")
+    //     getDocs(selectedC)
+    //     .then(res => setProvidersApi(res.docs.map(sale=>({id:sale.id,...sale.data()}))))
+    // }
     useEffect(() => {
         getVentas()
     },[])
@@ -41,22 +68,27 @@ export default function Ventas({route,navigation}){
    /////////////////////////////////////////////////////
    /////////////////////////////////////////////////////
     return(
-        <View style={{flex: 1}}>
-            <View style={estilos.caja}>
+         <LinearGradient 
+            colors={colorBackgroundModal}
+            start={{x:1,y:0}}
+            end={{x:0,y:1}}
+            style={{width:width,height:height}}>
+        <View style={styles.container}>
+            <View style={styles.caja}>
                 <TextInput
-                    style={estilos.busqueda}
+                    style={styles.textInput}
                     onChangeText={(e) => filtroBusqueda(e)}
                     value={filterBySearch}
                     placeholder="Buscar..."
                 />                       
             </View>
-            <View style={estilos.lista}>
-                <Text style={estilos.texto1}>Nro Venta</Text>
-                <Text style={estilos.texto2}>Total</Text>
-                <Text style={estilos.texto3}>Fecha </Text>
+            <View style={styles.lista}>
+                <Text style={styles.text}>Nro Venta</Text>
+                <Text style={styles.text}>Total</Text>
+                <Text style={styles.text}>Fecha </Text>
             </View>
-            <View style={{height:600}}>
-                <FlatList
+            <View style={{height:height*0.72,}}>
+            {!ventas?<Loading/>:<FlatList
                     data={dataRender}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => {
@@ -72,85 +104,98 @@ export default function Ventas({route,navigation}){
                             </TouchableOpacity> 
                         );
                     }}
-                />
+                />}
             </View>
-            <View style={estilos.containerNavBar}>     
-                  <TouchableOpacity onPress={() => console.log("ss")} style={estilos.botonNavBar}><LinearGradient  colors={[ '#ff7f49','#f23c3c', '#d20038']} style={{...estilos.botonNavBar,width: '100%'}}><Text style={estilos.textNavBar}>Anular</Text></LinearGradient></TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate("MenuPrincipal")}style={estilos.botonNavBar}><LinearGradient  colors={[ '#54b2f5','#9fa5f1', '#dc92cf']} style={{...estilos.botonNavBar,width: '100%'}}><Icon name="home" size={35} color="white" /></LinearGradient></TouchableOpacity>
-                  <TouchableOpacity onPress={() => console.log("comprobante")}style={estilos.botonNavBar}><LinearGradient  colors={['#3cf23c', '#00dea1']} style={{...estilos.botonNavBar,width: '100%'}}><Text style={estilos.textNavBar }>Resumen</Text></LinearGradient></TouchableOpacity>
-            </View>
-           
+            {/* NavBar() -------------------------------------------*/}
+            <View style = {styles.containerNavBar}>   
+                        <TouchableOpacity style={styles.buttom} onPress={() => console.log("Anular")}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="delete-forever" type="material-community" />  
+                                    <Text style={styles.textNavBar}>Anular</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="home" type="material-community" />  
+                                    <Text style={styles.textNavBar}>Home</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttom} onPress={() => console.log("comprobante")}>
+                                <Icon  
+                                    size={iconSize}
+                                    colors={[
+                                        {color:iconColorA,offset:"0",opacity:"1"},
+                                        {color:iconColorB,offset:"1",opacity:"1"},
+                                    ]}
+                                    name="content-save" type="material-community" />  
+                                    <Text style={styles.textNavBar} >Resumen</Text>
+                        </TouchableOpacity>
+                </View> 
         </View>   
+        </LinearGradient>
     )
 
 }
-const estilos = StyleSheet.create({
-    textNavBar : {
-        textAlign: "center",
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#fff',               
-    } ,
-      botonNavBar : {
-        width: '23%',
-        height: 50,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 10,
-        marginVertical: 10,
-        marginHorizontal: 20,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 12,
-        },  shadowOpacity: 0.58,
-        shadowRadius: 16.00,
-        elevation: 24,
-        backgroundColor: "green",
+
+const styles = StyleSheet.create({
+    container:{
+      flex:1,
+      alignItems:"center",
     },
-      containerNavBar: {
-        position: "absolute",
-        bottom: 0,
-        marginTop: "25%",
-        width: '100%',
-        height: 90,
-        backgroundColor: '#fff',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexDirection: 'row',
+    caja:{
+      width:width,
+      paddingTop:30,
+      alignItems:"center",
     },
-    text:{
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'black',   
-        textAlign:"center",            
+    textInput:{
+      padding: 10,
+      paddingStart:30,
+      width:width*0.5,
+      height:50,
+      marginTop:20,
+      marginBottom:5,
+      borderRadius:30,
+      backgroundColor:"#fff",
     },
     lista: {
-        flex: 1,
-        backgroundColor: "white",
+        width:width*0.88,
+        height: height*0.04,
         margin: 5,
-        elevation: 1,
+        backgroundColor: "white",
+        justifyContent:"space-between",
         flexDirection: "row",
         alignItems: "center",
-        padding: 0,
-        justifyContent:"space-between",
-        height: 50,
-      },
-    texto1: { color: "black", width: "30%" },
-    texto2: { color: "black", textAlign: "center", width: "30%" },
-    texto3: { color: "black", textAlign: "right", width: "30%" },
-    caja: {
-        margin:10,
-        alignItems: "center",
-        justifyContent: "center",
-        alignContent: "center",
     },
-    busqueda: {
-        textAlign: "center",
-        borderRadius: 5,
-        width: 200,
-        borderWidth: 1,
-        backgroundColor: "white",
+    text: { color: "black"},
+    Loading: {
+      flex: 1,
+      justifyContent: "center"
     },
-
+      /* NavBar() -------------------------------------*/
+         textNavBar : {
+            textAlign: "center",
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: 'black',               
+          } ,
+          containerNavBar: {
+            position: "absolute",
+            bottom: -20,
+            width: '100%',
+            height: 70,
+            backgroundColor: '#fff',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            flexDirection: 'row',
+          },
+    
+  
 })

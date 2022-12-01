@@ -1,6 +1,5 @@
 ////////////////////////////////////////////////////
 import React, {useEffect, useState } from "react";
-import Component from "react"
 import { ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,} from "react-native";
 ////////////////////////////////////////////////////
 import axios from 'axios'
@@ -19,6 +18,13 @@ const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
 const iconColorA="#206593"
 const iconColorB="#25EADE"
 ////////////////////////////////////////////////////
+const Loading =()=>{
+  return (
+    <View style={[styles.Loading]}>
+      <ActivityIndicator size="large" />
+    </View>
+  )
+}
 
 export default function NuevaCategoria({navigation}){
   /////////////////////////////////////////////////
@@ -33,24 +39,56 @@ export default function NuevaCategoria({navigation}){
         console.log(error);
       });
   }
+  const [responseApi,setResponseApi]= useState(null)
   useEffect(() => {
       peticionProductos()
   },[]);
+  useEffect(() => {
+    console.log("responseApi")
+    console.log(responseApi)
+    if (responseApi==="categoria creada"){
+      peticionProductos()
+      setCategoria("")
+      setResponseApi(null)
+      setLoadingOn(false);
+    }
+    if (responseApi==="categoria eliminada"){
+      peticionProductos()
+      setCategoria("")
+      setResponseApi(null)
+      setLoadingOn(false);
+    }
+},[responseApi]);
   /////////////////////////////////////////////////
   const deleteCategory=(category)=>{
     axios.delete(baseUrl+"/api/category",{ data: category})
     .then(function (response) {
       console.log(response.data);
+      setResponseApi(response.data)
     })
     .catch(function (error){
       console.log(error);
+      setResponseApi(error)
+    });
+  }
+  /////////////////////////////////////////////////
+  const postCategory=(category)=>{
+    axios.post(baseUrl+"/api/category",category
+    )
+    .then(function (response) {
+      console.log(response.data);
+      setResponseApi("categoria creada")
+    })
+    .catch(function (error) {
+      console.log(error);
+      setResponseApi(error)
     });
   }
   /////////////////////////////////////////////////
   /////////////////////////////////////////////////
-  /////////////////////////////////////////////////
   const [categoria, setCategoria] = useState("");
   const [text, setText] = useState("");
+  const [loadingOn, setLoadingOn] = useState(false)
   const agregarCategoria = function (e) {
     function namesCategorias(categorias){
       let result=[]
@@ -67,25 +105,18 @@ export default function NuevaCategoria({navigation}){
       Alert.alert("Esa categoria ya existe!");
       return;
     }
-    axios.post(baseUrl+"/api/category",e
-    )
-    .then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-    // funcion post
     console.log("agregar categoria")
+    setLoadingOn(true);
+    postCategory(e)
     peticionProductos()
     setText("")
     Alert.alert("Categoria agregada");
   };
   const eliminarCategoria = async function (e) {
     console.log("eliminar categoria")
-    await deleteCategory(categoria)
-    await peticionProductos()
-    setCategoria("")
+    deleteCategory(categoria)
+    setLoadingOn(true);
+    Alert.alert("Categoria Eliminada");
   };
 
   return (
@@ -97,6 +128,7 @@ export default function NuevaCategoria({navigation}){
     <View style={styles.container}>
       <Text style={styles.title}>Categorias</Text>
       <View style={styles.categoriasContainer}>
+      {!categoriasApi||loadingOn?<Loading/>:
         <FlatList
           data={categoriasApi}
           keyExtractor={(item) => item.id}
@@ -113,7 +145,7 @@ export default function NuevaCategoria({navigation}){
               </TouchableOpacity>
             );
           }}
-        />
+        />}
       </View>  
       {categoria ? (
         <TouchableOpacity style={styles.deleteCategoria} onPress={() => eliminarCategoria(categoria)}>
@@ -237,4 +269,8 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
     },
     /* Loading() -------------------------------------*/
+    Loading: {
+      flex: 1,
+      justifyContent: "center"
+    },
 })
