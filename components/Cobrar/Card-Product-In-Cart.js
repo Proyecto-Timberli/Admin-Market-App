@@ -44,7 +44,7 @@ const CardProducto = (
   ////////////////////////////////////////////////////////////////
   useEffect(() => {
     if(!existe(venta,"id",id)&&cantidad>0){
-      setVenta([...venta,{id:id,name:nombre,ammount:cantidad,price:precio}])
+      setVenta([...venta,{id:id,name:nombre,amount:cantidad,price:precio}])
       let productoSave = shopingCart.filter(i=>i.id===id)
       setShopingCart([...shopingCart.filter(i=>i.id!=id),{...productoSave[0],stock:productoSave[0].stock-cantidad}])
     }else{
@@ -57,7 +57,7 @@ const CardProducto = (
         let ventaEdit = [...venta]
         for(let i=0;i<ventaEdit.length;i++){
           if(ventaEdit[i].id===id){
-            ventaEdit[i]={...ventaEdit[i],ammount:cantidad}
+            ventaEdit[i]={...ventaEdit[i],amount:cantidad}
           }
         }
         setVenta(ventaEdit)

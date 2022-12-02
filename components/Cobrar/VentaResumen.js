@@ -4,6 +4,8 @@ import {ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,Tou
 ////////////////////////////////////////////////////
 import axios from 'axios'
 const baseUrl = "https://admin-market-api.herokuapp.com" ;
+import {getFirestore, doc} from 'firebase/firestore';
+import {deleteFirestore} from '../../functions/apiFunctions'
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -21,21 +23,28 @@ const iconColorB="#25EADE"
 const VentaResumen = ({route,navigation})=>{
   /////////////////////////////////////////////////////////
   const {id,resumen,fecha,total}=route.params
-  const data = resumen.resumen
+  console.log(resumen)
+  const data = resumen
   /////////////////////////////////////////////////////////
-  const baseUrl = "https://admin-market-api.herokuapp.com"
-  const deleteVenta=(venta)=>{
-    axios.delete(baseUrl+"/api/venta",{ data: venta})
-    .then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error){
-      console.log(error);
-    });
+  // const baseUrl = "https://admin-market-api.herokuapp.com"
+  // const deleteVenta=(venta)=>{
+  //   axios.delete(baseUrl+"/api/venta",{ data: venta})
+  //   .then(function (response) {
+  //     console.log(response.data);
+  //   })
+  //   .catch(function (error){
+  //     console.log(error);
+  //   });
+  // }
+  const deleteSale = ()=>{
+    const selected = doc(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/sales", id)
+    deleteFirestore(selected)
+    // putproduct stoock
   }
+
   /////////////////////////////////////////////////////////
   const anular = () => {
-    deleteVenta({id:id})
+    deleteSale()
     console.log("anular")
     Alert.alert("Venta Anulada");
     navigation.navigate("MenuPrincipal")
@@ -67,10 +76,10 @@ const VentaResumen = ({route,navigation})=>{
                             start={{x:1,y:0}}
                             end={{x:0,y:1}} 
                             style={styles.lista2}>
-                                    <Text style={styles.texto4}>{item.name}</Text>
-                                    <Text style={styles.texto4}>{item.price}</Text>
-                                    <Text style={styles.texto4}>Cantidad: {item.ammount}</Text>
-                                    <Text style={styles.texto4}>{item.price*item.ammount}</Text>
+                                    <Text style={styles.text}>{item.name}</Text>
+                                    <Text style={styles.text}>{item.price}</Text>
+                                    <Text style={styles.text}>Cantidad: {item.amount}</Text>
+                                    <Text style={styles.text}>{item.price*item.amount}</Text>
                           </LinearGradient >            
                         );
                     }}

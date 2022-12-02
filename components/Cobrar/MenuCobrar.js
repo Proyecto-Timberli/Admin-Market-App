@@ -2,8 +2,8 @@
 import React, {useEffect, useState } from "react";
 import {ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,} from "react-native";
 ////////////////////////////////////////////////////
-import axios from 'axios'
-const baseUrl = "https://admin-market-api.herokuapp.com" ;
+import {getFirestore, collection, Timestamp} from 'firebase/firestore';
+import {postFirestore} from '../../functions/apiFunctions'
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,11 +19,7 @@ const iconColorA="#206593"
 const iconColorB="#25EADE"
 ////////////////////////////////////////////////////
 import CardProducto from './Card-Product-In-Cart'
-// import React,{ useEffect, useState} from 'react';
-// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-// import { LinearGradient } from 'expo-linear-gradient';
-// import {View,Text,TextInput,FlatList,TouchableOpacity,StyleSheet,Modal,SafeAreaView } from 'react-native';
-// import axios from 'axios'
+
 export default function MenuCobrar({route,navigation}){
     /////////////////////////////////////////////////////
     function existe(arrayDeObjetos,atributo,valor){
@@ -57,7 +53,7 @@ export default function MenuCobrar({route,navigation}){
     },[venta])
     function sumaProductos(){
         let value = 0
-        venta?.forEach(producto => value=(value+(producto.ammount*producto.price)));
+        venta?.forEach(producto => value=(value+(producto.amount*producto.price)));
         setTotal(value)
     }
     const  putProductos= (productos)=>{
@@ -70,27 +66,25 @@ export default function MenuCobrar({route,navigation}){
           console.log(error);
         });
     }
-    const  postVenta= (venta)=>{
-        axios.post(baseUrl+"/api/venta",venta
-        )
-        .then(function (response) {
-          console.log(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    const postSale =(data)=>{
+        const selectedCollection = collection(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/sales")
+        postFirestore(selectedCollection,data)
     }
+
     async function registar(venta, productos){
         ///////////////////////actualizar productos stock en la DB//////////////////////////////
         console.log("actualizar productos stock")
-        await putProductos({products:[...productos]})
+        // await putProductos({products:[...productos]})
         ///////////////////////registar venta en la DB//////////////////////////////
         console.log("postear Venta")
         let postVentar =  {
+            idClient:"",
+            client:"",
             total:total,
-            resumen:{resumen:venta}
+            sellProducts:venta,
+            createdDate:Timestamp.now().toDate().toString()
         }
-        await postVenta(postVentar)
+        postSale(postVentar)
         navigation.navigate("Ventas")
     }
     /////////////////////////////////////////////////////
@@ -121,7 +115,7 @@ export default function MenuCobrar({route,navigation}){
                                 key={item.id+"p"}
                                 id={item.id}
                                 nombre={item.name}
-                                categoria={item.categories[0]}
+                                categoria={item.category}
                                 precio={item.price}
                                 product={item} 
                                 shopingCart={shopingCart}

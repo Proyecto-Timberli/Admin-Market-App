@@ -4,6 +4,7 @@ import {ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,Tou
 ////////////////////////////////////////////////////
 import axios from 'axios'
 const baseUrl = "https://admin-market-api.herokuapp.com" ;
+import {getFirestore, collection, getDocs, Timestamp} from 'firebase/firestore';
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -27,27 +28,17 @@ const Loading =()=>{
     )
   }
 export default function Ventas({route,navigation}){
-    const [ventas,setVentas]=useState(null)
-    const baseUrl = "https://admin-market-api.herokuapp.com" ;
-    const  getVentas= ()=>{
-        axios.get(baseUrl+"/api/venta"
-        )
-        .then(function (response) {
-            setVentas(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    const [salesApi,setSalesApi]=useState(null)
+    
+    const getVentas =  ()=>{
+      const selectedC = collection(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/sales")
+        getDocs(selectedC)
+        .then(res => setSalesApi(res.docs.map(sale=>({id:sale.id,...sale.data()}))))
     }
-    // const getVentas =  ()=>{
-    //   const selectedC = collection(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/sales")
-    //     getDocs(selectedC)
-    //     .then(res => setProvidersApi(res.docs.map(sale=>({id:sale.id,...sale.data()}))))
-    // }
     useEffect(() => {
         getVentas()
     },[])
-    let dataRender = ventas
+    let dataRender = salesApi
     /////////////////////////////////////////////////////
     /////////////////////////////////////////////////////
     
@@ -58,7 +49,7 @@ export default function Ventas({route,navigation}){
         );
     }
     const [filterBySearch, setFilterBySearch] = useState("");
-    let filtro = filtroName(ventas, filterBySearch, "id");
+    let filtro = filtroName(salesApi, filterBySearch, "id");
     const filtroBusqueda = function (e) {
         setFilterBySearch(e);
     };
@@ -88,18 +79,18 @@ export default function Ventas({route,navigation}){
                 <Text style={styles.text}>Fecha </Text>
             </View>
             <View style={{height:height*0.72,}}>
-            {!ventas?<Loading/>:<FlatList
+            {!salesApi?<Loading/>:<FlatList
                     data={dataRender}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => {
                         return (
-                            <TouchableOpacity onPress={() => navigation.navigate("VentaResumen",{id:item.id,total:item.total,fecha:item.createdAt,resumen:item.resumen})}>   
+                            <TouchableOpacity onPress={() => navigation.navigate("VentaResumen",{id:item.id,total:item.total,fecha:item.createdDate,resumen:item.sellProducts})}>   
                                 <CardVenta
                                     key={item.id+"p"}
                                     id={item.id}
                                     total={item.total}
-                                    fecha={item.createdAt}
-                                    resumen={item.resumen}
+                                    fecha={item.createdDate}
+                                    resumen={item.sellProducts}
                                 />
                             </TouchableOpacity> 
                         );

@@ -4,6 +4,8 @@ import {ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,Tou
 ////////////////////////////////////////////////////
 import axios from 'axios'
 const baseUrl = "https://admin-market-api.herokuapp.com" ;
+import {getFirestore, collection, getDocs} from 'firebase/firestore';
+import {postFirestore} from '../../functions/apiFunctions'
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -42,20 +44,30 @@ export default function BucarProductos({ route, navigation }){
             console.log(error);
         });
     }
+    const [productsApi,setProductsApi]=useState(null)
+    
+    const getProducts =  ()=>{
+      const selectedC = collection(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/products")
+        getDocs(selectedC)
+        .then(res => setProductsApi(res.docs.map(sale=>({id:sale.id,...sale.data()}))))
+    }
+   
     useEffect(() => {
         peticionProductos()
+        getProducts()
     },[]);
-    let arrayAMostrar = productosApi;
+    let arrayAMostrar = productsApi;
+
     /////////////////////////////////////////////////////
     /////////////////////////////////////////////////////
     const [filtroCategoria,setFiltroCategoria]= useState(null)
     function filtroCategory(category) {
-        if (!productosApi){return} 
+        if (!productsApi){return} 
         if (!category){return setFiltroCategoria(null)}
         return (
-        setFiltroCategoria(productosApi.filter((e) =>e.categories[0] && e.categories[0].includes(category))),
+        setFiltroCategoria(productsApi.filter((e) =>e.category && e.category.includes(category))),
         console.log("filtrado......................."),
-        console.log(productosApi.filter((e) =>e.categories[0] && e.categories[0].includes(category))),
+        console.log(productsApi.filter((e) =>e.category && e.category.includes(category))),
         // console.log(productosApi),
         console.log("filtrado.......................")
         )
@@ -121,7 +133,7 @@ export default function BucarProductos({ route, navigation }){
                                 key={item.id}
                                 id={item.id}
                                 nombre={item.name}
-                                categoria={item.categories[0]}
+                                categoria={item.category?item.category:null}
                                 precio={item.price}
                                 product={item}
                                 onPress={addToCart}
