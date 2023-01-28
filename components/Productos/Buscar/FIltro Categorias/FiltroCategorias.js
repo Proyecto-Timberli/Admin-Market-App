@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, View, Text} from "react-native";
-import axios from 'axios'
 import Select from './Select'
-import { LinearGradient } from 'expo-linear-gradient';
+import {useAuth} from '../../../../context/authContext'
+import {getFirestore, collection, getDocs, doc} from 'firebase/firestore';
 const {width, height} = Dimensions.get('window');
 export default function CategoriesSelect({filtrar}){
+  const {userProfile} = useAuth()
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-  const baseUrl = "https://admin-market-api.herokuapp.com" ;
-  const [categoriasApi,setCategoriasApi]= useState(null)
-  const peticionProductos=()=>{
-      axios.get(baseUrl+"/api/category"
-      )
-      .then(function (response) {
-        setCategoriasApi(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  const [categoriesApi,setCategoriesApi]= useState(null)
+  const getCategories =  ()=>{
+    const selectedC = collection(getFirestore(), "users/"+userProfile+"/categories")
+      getDocs(selectedC)
+      .then(res => setCategoriesApi(res.docs.map(category=>({id:category.id,...category.data()}))))
   }
+ 
   useEffect(() => {
-      peticionProductos()
+      getCategories()
   },[]);
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -28,7 +24,7 @@ export default function CategoriesSelect({filtrar}){
         <>
         <View style={styles.container}>
           <Text style={styles.title}>Filtrar por Categorias</Text>
-          <Select touchableText = "Selecciona una Categoria" title="Categorias" objKey='id' objValue= "name" data={categoriasApi} filtrar={filtrar}/>
+          <Select touchableText = "Selecciona una Categoria" title="Categorias" objKey='id' objValue= "name" data={categoriesApi} filtrar={filtrar}/>
         </View>
       </>
     )

@@ -18,10 +18,11 @@ import BucarProductos from './Cobrar/BuscarProductos'
 import Ventas from './Cobrar/Ventas'
 import VentaResumen from './Cobrar/VentaResumen'
 //-----------------------cuenta------------------------------------
-import MenuCuenta from "./Cuenta/MenuCuenta";
+
 // Components
 import Register from "./Login/Register";
 import Login from "./Login/Login";
+import Starting from "./Login/Starting"
 import Cuenta from "./Cuenta/firestore"
 import Customers from './Clientes/Customers'
 import InformationClient from './Clientes/Client-Edit-Info'
@@ -29,12 +30,22 @@ import AddClient from './Clientes/Add-Client'
 import Providers from './Provedores/Providers'
 import AddProvider from './Provedores/Add-Provider'
 import InformationProvider from './Provedores/Provider-Edit-Info'
+import LinkProfileToUser from './Cuenta/Link-Profile'
+import MyProfiles from './Cuenta/MyProfiles'
+import MyAcount from './Cuenta/MyAcount';
+import MyBusiness from './Cuenta/MyBusiness';
+import ConfigProfile from './Cuenta/ConfigProfile'
+import UserSelection from './Cuenta/UserSelection'
+
 
 const {width, height} = Dimensions.get('window');
 const Stack = createNativeStackNavigator();
 const iconSize= 100;
 function MenuPrincipal(){
+    console.log("------------------------")
+    console.log("MenuPrincipal")
     const navigation = useNavigation();
+    console.log("------------------------")
     return(
         <View style={styles.container}>
             <View style={styles.buttonContainer}>
@@ -119,7 +130,6 @@ export default function MenuMain(){
     return( 
         <NavigationContainer>  
             <AuthProvider>
-            {/* <Stack.Navigator initialRouteName="MenuPrincipal" */}
             <Stack.Navigator initialRouteName="Login"
                 screenOptions={{
                     headerShown: false,
@@ -142,6 +152,34 @@ export default function MenuMain(){
                 <Stack.Screen
                 name="Register"
                 component={Register}
+                />
+                 <Stack.Screen
+                name="Starting"
+                component={Starting}
+                />
+                <Stack.Screen
+                name="MyProfiles"
+                component={MyProfiles}
+                />
+                 <Stack.Screen
+                name="MyAcount"
+                component={MyAcount}
+                />
+                 <Stack.Screen
+                name="MyBusiness"
+                component={MyBusiness}
+                />
+                <Stack.Screen
+                name="Link-Profile-To-User"
+                component={LinkProfileToUser}
+                />
+                <Stack.Screen
+                name="ConfigProfile"
+                component={ConfigProfile}
+                />
+                 <Stack.Screen
+                name="UserSelection"
+                component={UserSelection}
                 />
                 <Stack.Screen
                 name="Customers"
@@ -167,6 +205,10 @@ export default function MenuMain(){
                 name="Provider-info"
                 component={InformationProvider}
                 />
+
+
+            
+              
             </Stack.Navigator>
             </AuthProvider>
         </NavigationContainer>

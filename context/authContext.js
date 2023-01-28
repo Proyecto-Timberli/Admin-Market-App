@@ -4,12 +4,14 @@ import {auth} from '../components/Login/Practice/database/firebase'
 
 export const authContext = createContext();
 export function useAuth (){
-   const context = useContext(authContext)
-   return context
+    const context = useContext(authContext)
+    return context
 }
 
+ 
 export function AuthProvider({children}){
     const [user, setUser] = useState(null)
+    const [userProfile, setUserProfile] = useState(null)
     const [loading, setLoading] = useState(true)
     const signup = (email , password ) => 
         createUserWithEmailAndPassword(auth, email, password);
@@ -20,16 +22,28 @@ export function AuthProvider({children}){
         const googleProvider =  new GoogleAuthProvider()
         return signInWithPopup(auth, googleProvider)
     }
-    
+    const changedProfile = (uid)=>{
+        console.log("------------------------")
+        console.log("AuthProvider")
+        console.log("changedProfile")
+        console.log("------------------------")
+        setUserProfile(uid)
+    }
     useEffect(() => {
         onAuthStateChanged(auth, currentUser =>{
-            console.log(currentUser)
             setUser(currentUser)
+            console.log("------------------------")
+            console.log("AuthProvider")
+            console.log("Combrobando si hay usuario logeado")
+            console.log("currentUser.uid:")
+            console.log(currentUser?.uid)
+            console.log("------------------------")
+            setUserProfile(currentUser?.uid)
             setLoading(false)
         })
     },[])
     return (
-        <authContext.Provider value={{signup, login, user, logout, loading, loginWithGoogle}}>
+        <authContext.Provider value={{signup, login, user, logout, loading, loginWithGoogle,changedProfile,userProfile}}>
              {children}
         </authContext.Provider>
     )

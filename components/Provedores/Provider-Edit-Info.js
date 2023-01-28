@@ -6,6 +6,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
 ////////////////////////////////////////////////////
+import {useAuth} from '../../context/authContext'
 import {getFirestore, doc} from 'firebase/firestore';
 import {putFirestore, deleteFirestore} from '../../functions/apiFunctions'
 ////////////////////////////////////////////////////
@@ -102,6 +103,9 @@ function Editar({dato, setState, stateModal }){
 }
 
 export default function InformationProvider({navigation,route}) {
+  console.log("------------------------")
+  console.log("InformationProvider")
+  const {userProfile} = useAuth()
   const {id, identifier, phone, location} = route.params
   /////////////////////////////////////////////////
   const[editable,setEditable]= useState({
@@ -112,12 +116,12 @@ export default function InformationProvider({navigation,route}) {
   })
   /////////////////////////////////////////////////
   const putClient = (data)=>{
-    const selected = doc(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/providers", id)
+    const selected = doc(getFirestore(), "users/"+userProfile+"/providers", id)
     putFirestore(selected,data)
   }
   
   const deleteClient = ()=>{
-    const selected = doc(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/providers", id)
+    const selected = doc(getFirestore(), "users/"+userProfile+"/providers", id)
     deleteFirestore(selected)
   }
 
@@ -138,6 +142,7 @@ export default function InformationProvider({navigation,route}) {
     Alert.alert("Provedor Actualizado");
     navigation.navigate("Home")
   }
+  console.log("------------------------")
   return (
         <LinearGradient 
                 colors={[ '#F1F4F4','#DADEDF']}

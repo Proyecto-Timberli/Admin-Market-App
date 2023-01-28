@@ -15,26 +15,22 @@ const Loading =()=>{
   )
 }
 const Providers= ({navigation}) => {
-  const {user, logout, loading} = useAuth()
-  const [selectedCollection, setSelectedCollection] = useState(null)
+  console.log("------------------------")
+  console.log("Providers")
+  const {userProfile} = useAuth()
   const [providersApi,setProvidersApi]= useState(null)
   const peticion =  ()=>{
-    const selectedC = collection(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/providers")
+    const selectedC = collection(getFirestore(), "users/"+userProfile+"/providers")
       getDocs(selectedC)
       .then(res => setProvidersApi(res.docs.map(provider=>({id:provider.id,...provider.data()}))))
   }
   useEffect(() => {
     peticion()
   },[])
-//   const peticionProvideres=()=>{ 
-//     console.log("peticion Provideres")
-//   }
-//   useEffect(() => {
-//       peticionProvideres()
-//   },[]);
+
   /////////////////////////////////////////////////////
   const addProvider = ()=>{
-    const selectedCollection = collection(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/Providers")
+    const selectedCollection = collection(getFirestore(), "users/"+userProfile+"/Providers")
     postFirestore(selectedCollection)
   }
   /////////////////////////////////////////////////////
@@ -68,7 +64,7 @@ const Providers= ({navigation}) => {
   }
   
   /////////////////////////////////////////////////////
-  
+  console.log("------------------------")
     return (
       <LinearGradient 
                 colors={[ '#F1F4F4','#DADEDF']}

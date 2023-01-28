@@ -1,12 +1,18 @@
 import React, {useState } from "react";
 import { Dimensions,TextInput, Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 ////////////////////////////////////////////////////
-import axios from 'axios'
-const baseUrl = "https://admin-market-api.herokuapp.com" ;
+import {useAuth} from '../../context/authContext'
+import {getFirestore, doc} from 'firebase/firestore';
+import {putFirestore, deleteFirestore} from '../../functions/apiFunctions'
 ////////////////////////////////////////////////////
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
+
+import BarCode from '../BarCode/BarCode'
+import BarCodeIcon from '../BarCode/BarCodeIcon'
+
+
 const {width, height} = Dimensions.get('window');
 ////////////////////Colors//////////////////////////
 const iconSize= 50;
@@ -16,9 +22,9 @@ const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
 const iconColorA="#206593"
 const iconColorB="#25EADE"
 ////////////////////////////////////////////////////
-function ModalSalir({deleteFunction,deleteData,navigation,stateModal}){
+function ModalSalir({deleteFunction,navigation,stateModal}){
   function checkOk(){
-    deleteFunction(deleteData)
+    deleteFunction()
     Alert.alert("Producto Eliminado");
     stateModal(false)
     navigation.navigate("MenuProductos")
@@ -81,7 +87,6 @@ function Modal({dato, state, setState, stateModal}){
 function Editar({dato, setState, stateModal }){
   const edit = ()=>{
     setState(dato)
-    console.log("edit "+ dato)
     stateModal(true)
   }
   return (
@@ -100,42 +105,40 @@ function Editar({dato, setState, stateModal }){
 }
 
 export default function InformacionProducto({navigation,route}) {
-  const {amount, buyprice, categories, description,id,image, make, name, price, stock} = route.params
+  console.log("------------------------")
+  console.log("InformacionProducto")
+  const {userProfile} = useAuth()
+  const {barCode, buyprice, category, description,id,image, make, name, price, stock} = route.params
   /////////////////////////////////////////////////
   const[editable,setEditable]= useState({
     id:id,
-    name: name,
-    price: price,
-    stock : stock,
-    categoriesids: categories,
-    make: make,
-    buyprice: buyprice,
+    name: name?name:"",
+    price: price?price:"",
+    stock : stock?stock:"",
+    category: category?category:"",
+    make: make?make:"",
+    buyprice: buyprice?buyprice:"",
+    barCode: barCode?barCode:"",
+    image: image?image:"", 
+    description: description?description:""
   })
+
   /////////////////////////////////////////////////
-  const putProductos=(productos)=>{
-      axios.put(baseUrl+"/api/product",productos
-      )
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+   const putProducts = (data)=>{
+    const selected = doc(getFirestore(), "users/"+userProfile+"/products", data.id)
+    putFirestore(selected,data)
   }
-  /////////////////////////////////////////////////
-  const deleteProductos=(productos)=>{
-    axios.delete(baseUrl+"/api/product",{ data: productos})
-    .then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error){
-      console.log(error);
-    });
+  
+  const deleteProducts = ()=>{
+    const selected = doc(getFirestore(), "users/"+userProfile+"/products", id)
+    deleteFirestore(selected)
   }
+
   /////////////////////////////////////////////////
   const[modal,setModal]= useState(false)
   const[dato,setDato]= useState(false)
   const[modalSalir,setModalSalir]= useState(false)
+  const [scannOn,setScannOn]=useState(false)
   const salir = () => {
     navigation.navigate("Productos")
   }
@@ -144,20 +147,27 @@ export default function InformacionProducto({navigation,route}) {
     setModalSalir(true)
   }
   const guardar = () => {
-    putProductos({products:[editable]})
-    console.log("guardar")
+    putProducts(editable)
     Alert.alert("Producto Actualizado");
     navigation.navigate("MenuProductos")
   }
+  const copyCode = (code) => {
+    setEditable({
+      ...editable,
+      barCode:code
+    })
+  }
+  console.log("------------------------")
   return (
         <LinearGradient 
                 colors={[ '#F1F4F4','#DADEDF']}
                 start={{x:1,y:0}}
                 end={{x:0,y:1}}
                 style={{width:width,height:height}}>
+       {scannOn&&<BarCode codeFunction={copyCode}setActive={setScannOn}/>}
        <View style={styles.container}>
          {modal&&<Modal dato={dato} state={editable} setState={setEditable} stateModal={setModal}/>}
-         {modalSalir&&<ModalSalir deleteFunction={deleteProductos}deleteData={{products:[editable]}}navigation={navigation}stateModal={setModalSalir}/>}
+         {modalSalir&&<ModalSalir deleteFunction={deleteProducts} navigation={navigation}stateModal={setModalSalir}/>}
             <View style={{...styles.cotainerTitle}}>
               <Text style = {styles. textTitle}>Informacion del Producto: {id}</Text>
             </View> 
@@ -194,8 +204,8 @@ export default function InformacionProducto({navigation,route}) {
               start={{x:1,y:0}}
               end={{x:0,y:1}}
               style={styles.cotainerIcon}> 
-              <Text style = {styles.text}> Categoria: {editable.categoriesids}</Text>
-              <Editar dato={"categoriesids"}setState={setDato} stateModal={setModal}/>
+              <Text style = {styles.text}> Categoria: {editable.category}</Text>
+              <Editar dato={"category"}setState={setDato} stateModal={setModal}/>
             </LinearGradient>
            
             <LinearGradient 
@@ -212,26 +222,18 @@ export default function InformacionProducto({navigation,route}) {
               start={{x:1,y:0}}
               end={{x:0,y:1}}
               style={styles.cotainerIcon}> 
-              <Text style = {styles.text}> Precio anterior: {editable.precioAnterior} </Text>
-              <Editar dato={"precioAnterior"}setState={setDato} stateModal={setModal}/>
-            </LinearGradient>
-            
-            <LinearGradient 
-              colors={[ '#F8E9E9','#B9C7CA']}
-              start={{x:1,y:0}}
-              end={{x:0,y:1}}
-              style={styles.cotainerIcon}> 
               <Text style = {styles.text}> Precio de compra: {editable.buyprice} </Text>
               <Editar dato={"buyprice"}setState={setDato} stateModal={setModal}/>
             </LinearGradient>
             
             <LinearGradient 
-              colors={[ '#F8E9E9','#B9C7CA']}
+              colors={colorA}
               start={{x:1,y:0}}
               end={{x:0,y:1}}
               style={styles.cotainerIcon}> 
-              <Text style = {styles.text}> Codigo: {editable.codigo} </Text>
-              <Editar dato={"codigo"}setState={setDato} stateModal={setModal}/>
+              <Text style = {{...styles.text,width:width*0.7}}> Codigo: {editable.barCode} </Text>
+              <TouchableOpacity onPress={()=>{setScannOn(true)}}><BarCodeIcon size={30}/></TouchableOpacity>
+              <Editar dato={"barCode"}setState={setDato} stateModal={setModal}/> 
             </LinearGradient>
             
             <LinearGradient 

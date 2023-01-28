@@ -14,28 +14,18 @@ const Loading =()=>{
     </View>
   )
 }
-const Customers= ({navigation}) => {
-  const {user, logout, loading} = useAuth()
-  const [selectedCollection, setSelectedCollection] = useState(null)
+const Customers= ({navigation,route}) => {
+  console.log("------------------------")
+  console.log("Customers")
+  const {userProfile} = useAuth()
   const [customersApi,setCustomersApi]= useState(null)
-  useEffect(async() => {
-      const selectedC = collection(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/customers")
-      await getDocs(selectedC)
-      .then(res => setCustomersApi(res.docs.map(client=>({id:client.id,...client.data()}))))
-      //corregir warning
-      
-  },[])
-  const peticionClientes=()=>{ 
-    console.log("peticion clientes")
-  }
   useEffect(() => {
-      peticionClientes()
-  },[]);
+      const selectedC = collection(getFirestore(), "users/"+userProfile+"/customers")
+      getDocs(selectedC)
+      .then(res => setCustomersApi(res.docs.map(client=>({id:client.id,...client.data()}))))
+  },[])
+
   /////////////////////////////////////////////////////
-  const addClient = ()=>{
-    const selectedCollection = collection(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/customers")
-    postFirestore(selectedCollection)
-  }
   /////////////////////////////////////////////////////
   let arrayAMostrar = customersApi;
   /////////////////////////////////////////////////////
@@ -65,8 +55,8 @@ const Customers= ({navigation}) => {
     setIdSelect(params.id)
     navigation.navigate("Client-info",{...params})
   }
-  
   /////////////////////////////////////////////////////
+  console.log("------------------------")
   
     return (
       <LinearGradient 
@@ -110,6 +100,7 @@ const Customers= ({navigation}) => {
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity
+                  onLongPress={route.params?()=>navigation.navigate("MenuCobrar",{client:{id:item.id,identifier:item.identifier}}): null}
                   onPress={() => onPressHandler(item)}>
                   <CardClient
                     key={item.id}

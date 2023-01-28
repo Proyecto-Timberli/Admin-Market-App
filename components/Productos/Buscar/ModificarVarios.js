@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import { ActivityIndicator, Dimensions, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,Modal, SafeAreaView} from "react-native";
 ////////////////////////////////////////////////////
-import axios from 'axios'
-const baseUrl = "https://admin-market-api.herokuapp.com" ;
+import {useAuth} from '../../../context/authContext'
+import {getFirestore, doc} from 'firebase/firestore';
+import {putFirestore, deleteFirestore} from '../../../functions/apiFunctions'
 ////////////////////////////////////////////////////
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Icon } from 'react-native-gradient-icon';
@@ -39,6 +40,7 @@ function ModalLoading(){
 }
 
 export default function ModificarVarios({estado,listaSeleccionados,setListaSeleccionados,listaCompleta,recargarLista,navigation}){
+    const {userProfile} = useAuth()
     const [todos,setTodos]=useState(false)// check todos
     const [visible,setVisible]=useState(false)// modal on o off
     const [aumentar,setAumentar]=useState(true)// aumentar o bajar precios
@@ -62,16 +64,14 @@ export default function ModificarVarios({estado,listaSeleccionados,setListaSelec
             return setListaFinalGuardada(listaSeleccionados.map(e=>e={...e,price:e.price-(e.price*(valor/100))}))
         }
     }
-    const  putProductos= (productos)=>{
-        axios.put(baseUrl+"/api/product",productos
-        )
-        .then(function (response) {
-            console.log(response.data);
-        })
-        .catch(function (error) {
-            console.log(error);
+
+    const putProducts = (data)=>{
+        data.forEach(product=>{
+            const selected = doc(getFirestore(), "users/"+userProfile+"/products", product.id)
+            putFirestore(selected,product)
         });
     }
+      
     function aplicar(){
         if (!valor){return}
         listaFinal()
@@ -87,10 +87,10 @@ export default function ModificarVarios({estado,listaSeleccionados,setListaSelec
     function guardar(){
         if (!listaFinalGuardada){return}
         setLoading(true)
-        let productos = {products:listaFinalGuardada}
+        let productos = listaFinalGuardada
         setListaFinalGuardada(null)
         setValor(0)
-        putProductos(productos)
+        putProducts(productos)
         setTimeout(() => {recargarLista()
             setTodos(false)
             setListaSeleccionados([])

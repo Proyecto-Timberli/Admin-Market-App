@@ -18,41 +18,24 @@ const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
 const iconColorA="#206593"
 const iconColorB="#25EADE"
 ////////////////////////////////////////////////////
-import CardVenta from './CardVenta'
-const Loading =()=>{
-    return (
-      <View style={[styles.Loading]}>
-        <ActivityIndicator size="large" />
-      </View>
-    )
-}
-export default function Ventas({route,navigation}){
-    console.log("------------------------")
-    console.log("Ventas")
-    const {userProfile} = useAuth()
-    //////////////////////filtro por cliente///////////////////////////////
-    const idClient = route.params? route.params.idClient: null
+import CardCompra from './CardCompra'
+import Loading from '../../functions/Loading'
 
+export default function Compras({route,navigation}){
+    const {userProfile} = useAuth()
     ////////////////////conexion Api////////////////////////////
-    const [salesApi,setSalesApi]=useState(null)
-    const getVentas =  ()=>{
-      const selectedC = collection(getFirestore(), "users/"+userProfile+"/sales")
+    const [shoppingApi,setShoppingApi]=useState(null)
+    const getCompras =  ()=>{
+      const selectedC = collection(getFirestore(), "users/"+userProfile+"/shopping")
         getDocs(selectedC)
-        .then(res => setSalesApi(res.docs.map(sale=>({id:sale.id,...sale.data()}))))
+        .then(res => setShoppingApi(res.docs.map(buy=>({id:buy.id,...buy.data()}))))
     }
     useEffect(() => {
-        if(userProfile){
-           getVentas()
-        }
+        if(userProfile){getCompras()}
     },[])
-    let dataRender = []
-    if(idClient){
-        dataRender= salesApi?.filter(sale=> sale.idClient===idClient)
-    }else{
-        dataRender = salesApi
-    }
+    let dataRender = shoppingApi
     /////////////////////////////////////////////////////
-    
+    /////////////////////////////////////////////////////
     
     function filtroName(array, search, attibute) {
         if (!array){return} 
@@ -62,7 +45,7 @@ export default function Ventas({route,navigation}){
         );
     }
     const [filterBySearch, setFilterBySearch] = useState("");
-    let filtro = filtroName(salesApi, filterBySearch, "id");
+    let filtro = filtroName(shoppingApi, filterBySearch, "id");
     const filtroBusqueda = function (e) {
         setFilterBySearch(e);
     };
@@ -71,7 +54,6 @@ export default function Ventas({route,navigation}){
         dataRender=filtro
     }
    /////////////////////////////////////////////////////
-   console.log("------------------------")
    /////////////////////////////////////////////////////
     return(
          <LinearGradient 
@@ -81,31 +63,31 @@ export default function Ventas({route,navigation}){
             style={{width:width,height:height}}>
         <View style={styles.container}>
             <View style={styles.caja}>
-            {!idClient&&<TextInput
+                <TextInput
                     style={styles.textInput}
                     onChangeText={(e) => filtroBusqueda(e)}
                     value={filterBySearch}
                     placeholder="Buscar..."
-                /> }                      
+                />                       
             </View>
             <View style={styles.lista}>
-                <Text style={styles.text}>Nro Venta</Text>
+                <Text style={styles.text}>Nro Compra</Text>
                 <Text style={styles.text}>Total</Text>
                 <Text style={styles.text}>Fecha </Text>
             </View>
             <View style={{height:height*0.72,}}>
-            {!salesApi?<Loading/>:<FlatList
+            {!shoppingApi?<Loading/>:<FlatList
                     data={dataRender}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => {
                         return (
-                            <TouchableOpacity onPress={() => navigation.navigate("VentaResumen",{id:item.id,total:item.total,fecha:item.createdDate,resumen:item.sellProducts, client:item.client,idClient:item.idClient,wayToPay:item.wayToPay})}>   
-                                <CardVenta
+                            <TouchableOpacity onPress={() => navigation.navigate("CompraResumen",{id:item.id,total:item.total,fecha:item.createdDate,resumen:item.buyProducts, provider:item.provider,idProvider:item.idProvider,wayToPay:item.wayToPay})}>   
+                                <CardCompra
                                     key={item.id+"p"}
                                     id={item.id}
                                     total={item.total}
                                     fecha={item.createdDate}
-                                    resumen={item.sellProducts}
+                                    resumen={item.buyProducts}
                                     // client={item.client}
                                     // idClient={item.idClient}
                                     // wayToPay={item.wayToPay}
@@ -166,10 +148,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     text: { color: "black"},
-    Loading: {
-      flex: 1,
-      justifyContent: "center"
-    },
+
       /* NavBar() -------------------------------------*/
          textNavBar : {
             textAlign: "center",

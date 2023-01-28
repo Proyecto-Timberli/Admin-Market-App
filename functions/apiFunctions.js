@@ -32,3 +32,31 @@ export const postFirestore = (selectedCollection,data)=>{
         return(error.message)
     })
 }
+export const postFirestoreId = (docRef,data)=>{
+    setDoc(docRef, data)
+    .then(res => {
+        console.log("se agrego el documento");
+        return("se agrego el documento");
+    })
+    .catch(error => {
+        console.log(error.message);
+        return(error.message)
+    })
+}
+
+
+export const postFirestorePlus = (selectedCollection,array)=>{
+    array.forEach(element => {
+        addDoc(selectedCollection, element)
+        .then(res => {
+            console.log("se agrego el documento");
+            return("se agrego el documento");
+        })
+        .catch(error => {
+            console.log(error.message);
+            return(error.message)
+        })
+    });
+    
+}
+

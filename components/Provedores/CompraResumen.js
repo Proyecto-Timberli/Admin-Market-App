@@ -1,17 +1,15 @@
 ////////////////////////////////////////////////////
 import React, {useEffect, useState } from "react";
-import {ActivityIndicator,Platform, Dimensions, FlatList, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,} from "react-native";
+import {ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,} from "react-native";
 ////////////////////////////////////////////////////
 import {useAuth} from '../../context/authContext'
-import {getFirestore, doc ,getDoc} from 'firebase/firestore';
-import {deleteFirestore,putFirestore} from '../../functions/apiFunctions'
+import {getFirestore, doc} from 'firebase/firestore';
+import {deleteFirestore} from '../../functions/apiFunctions'
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
-import * as Print from 'expo-print';
-import { shareAsync } from 'expo-sharing';
 const {width, height} = Dimensions.get('window');
 ////////////////////Colors//////////////////////////
 const iconSize= 50;
@@ -21,110 +19,25 @@ const colorBackgroundModal=[ '#F1F4F4','#DADEDF']
 const iconColorA="#206593"
 const iconColorB="#25EADE"
 ////////////////////////////////////////////////////
-const VentaResumen = ({route,navigation})=>{
-  console.log("------------------------")
-  console.log("VentaResumen")
+const CompraResumen = ({route,navigation})=>{
   const {userProfile} = useAuth()
-/////////////////////////////////////////////////////////
-  const {id,resumen,fecha,total,client,idClient,wayToPay}=route.params
+  /////////////////////////////////////////////////////////
+  const {id,resumen,fecha,total,provider,idProvider,wayToPay}=route.params
   const data = resumen
-/////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////
 
   const deleteSale = ()=>{
-    const selected = doc(getFirestore(), "users/"+userProfile+"/sales", id)
+    const selected = doc(getFirestore(), "users/"+userProfile+"/shopping", id)
     deleteFirestore(selected)
     // putproduct stoock
   }
-  
-  const putProductsStock = (data)=>{
-    data.forEach(product=>{
-        const selectedDoc = doc(getFirestore(), "users/"+userProfile+"/products", product.id)
-        let productEdit=null
-        
-        getDoc(selectedDoc).then(
-          res => console.log({id:res.id,...res.data()})
-        ).catch(function(error) {
-          console.log('There has been a problem with your fetch operation: ' + error.message);
-        })
-        // controlar stock a devolver
-        // productSave = {...product,stock: productSave.stock+product.amount}
-        putFirestore(selectedDoc,productSave)
-    });
-  }
- 
-/////////////////////////////////////////////////////////
-  
- 
-  const anular = (products) => {
+
+  /////////////////////////////////////////////////////////
+  const anular = () => {
     deleteSale()
-    putProductsStock(products)
-    Alert.alert("Venta Anulada");
+    Alert.alert("Compra Anulada");
     navigation.navigate("MenuPrincipal")
   }
-
-/////////////////////////////////////////////////////////
-  const html = `
-  <html>
-    <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-    </head>
-    <body style="width:100%;text-align: center;justify-content: center;">
-    <div style="display:flex;flex-wrap: wrap;background-color:#F8E9E9;margin-bottom:15px; ">
-      <div style="width:59%;height:28%;padding:10px;text-align:left;">
-        <p style="text-align:right;">No valido como factura</p>
-        <p>Usuario Empresa</p>
-        <p>Cuil: 88-88888888-8</p>
-        <p>Fecha: ${fecha}</p>
-        <p>Nro de venta: ${id}</p>
-        <p>Nro de Cliente: ${idClient}</p>
-        <p>Cliente: ${client}</p>
-        <p>Forma de pago: ${wayToPay}</p>
-      </div>
-      <div style="width:35%;height:28%;">
-        <img style="margin-top:36px;"src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Codigo_QR.svg/2048px-Codigo_QR.svg.png" alt="QR" width="250" height="250">
-      </div>
-    </div>
-      ${resumen.map(product=> 
-        ` <div style="background-color:#F8E9E9;width:100%;height:9%;margin-bottom:5px;display:flex;flex-wrap: wrap;">
-            <p style="width:100%;text-align:center;">${product.name}</p>
-            <p style="width:33%;text-align:center;">Precio por unidad: $ ${product.price}</p>            
-            <p style="width:33%;text-align:center;">Cantidad: ${product.amount}</p>          
-            <p style="width:33%;text-align:center;">Precio Final $ ${product.price*product.amount}</p>
-            
-          </div>`
-      )}
-      
-      <p style="background-color:#F8E9E9;width:100%;margin-bottom:15px; padding:10px;">Total: $ ${total}</p>
-
-    </body>
-  </html>
-  `;
-  const [selectedPrinter, setSelectedPrinter] = React.useState();
-
-  const print = async () => {
-    // On iOS/android prints the given html. On web prints the HTML from the current page.
-    await Print.printAsync({
-      html,
-      height: 92, 
-      width:192,
-      printerUrl: selectedPrinter?.url, // iOS only
-    });
-  };
-
-  const printToFile = async () => {
-    // On iOS/android prints the given html. On web prints the HTML from the current page.
-    const { uri } = await Print.printToFileAsync({ html });
-    console.log('File has been saved to:', uri);
-    await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
-  };
-
-  const selectPrinter = async () => {
-    const printer = await Print.selectPrinterAsync(); // iOS only
-    setSelectedPrinter(printer);
-  };
-  console.log("------------------------")
-  
-
     return (
         
           <LinearGradient 
@@ -140,8 +53,8 @@ const VentaResumen = ({route,navigation})=>{
                             style={styles.lista}>
                     <Text style={styles.text}>Nro de venta: {id}</Text>
                     <Text style={styles.text}>Fecha: {fecha} </Text>
-                    <Text style={styles.text}>Cliente: {client?client:"ninguno"}</Text>
-                    <Text style={styles.text}>Nro de Cliente: {idClient?idClient:"ninguno"}</Text>
+                    <Text style={styles.text}>Provedor: {provider?provider:"ninguno"}</Text>
+                    <Text style={styles.text}>Nro de Provedor: {idProvider?idProvider:"ninguno"}</Text>
                     <Text style={styles.text}>Forma de Pago: {wayToPay?wayToPay:"ninguna"} </Text>
                 </LinearGradient >
                 
@@ -158,9 +71,9 @@ const VentaResumen = ({route,navigation})=>{
                             end={{x:0,y:1}} 
                             style={styles.lista2}>
                                     <Text style={styles.text}>{item.name}</Text>
-                                    <Text style={styles.text}>Precio por unidad: {item.price}</Text>
+                                    <Text style={styles.text}>{item.price}</Text>
                                     <Text style={styles.text}>Cantidad: {item.amount}</Text>
-                                    <Text style={styles.text}>Total Producto: {item.price*item.amount}</Text>
+                                    <Text style={styles.text}>{item.price*item.amount}</Text>
                           </LinearGradient >            
                         );
                     }}
@@ -175,7 +88,7 @@ const VentaResumen = ({route,navigation})=>{
             </View>
                    {/* NavBar() -------------------------------------------*/}
                    <View style = {styles.containerNavBar}>   
-                        <TouchableOpacity style={styles.buttom} onPress={() => anular(data)}>
+                        <TouchableOpacity style={styles.buttom} onPress={() => anular()}>
                                 <Icon  
                                     size={iconSize}
                                     colors={[
@@ -195,7 +108,7 @@ const VentaResumen = ({route,navigation})=>{
                                     name="home" type="material-community" />  
                                     <Text style={styles.textNavBar}>Home</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttom} onPress={Platform.OS === 'ios'?selectPrinter: print}>
+                        <TouchableOpacity style={styles.buttom} onPress={() => console.log("comprobante")}>
                                 <Icon  
                                     size={iconSize}
                                     colors={[
@@ -230,11 +143,13 @@ const VentaResumen = ({route,navigation})=>{
       justifyContent: "center",
     },
       lista2: {
+      flex: 1,
       width: width*0.9,
-      height: height*0.13,
       marginBottom: 5,
       padding: 10,
-      flexWrap: "wrap"
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: 'space-between',
     },
     text: { color: "black"},
     textTotal:{
@@ -260,9 +175,9 @@ const VentaResumen = ({route,navigation})=>{
             alignItems: 'center',
             flexDirection: 'row',
           },
+    
+  
 })
 
-
-
-
-export default VentaResumen;
+  
+  export default CompraResumen;

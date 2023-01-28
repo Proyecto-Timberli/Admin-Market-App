@@ -4,7 +4,7 @@ import MenuMain from './components/MenuMain'
 export default function App() {
   return ( 
     <MenuMain/> 
-    // <AppPractice/>
+    
   );
 }
 

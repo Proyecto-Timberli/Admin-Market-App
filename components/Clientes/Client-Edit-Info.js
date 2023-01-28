@@ -6,6 +6,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
 ////////////////////////////////////////////////////
+import {useAuth} from '../../context/authContext'
 import {getFirestore, doc} from 'firebase/firestore';
 import {putFirestore, deleteFirestore} from '../../functions/apiFunctions'
 ////////////////////////////////////////////////////
@@ -102,6 +103,9 @@ function Editar({dato, setState, stateModal }){
 }
 
 export default function InformationClient({navigation,route}) {
+  console.log("------------------------")
+  console.log("InformationClient")
+  const {userProfile} = useAuth()
   const {id, identifier, phone, location} = route.params
   /////////////////////////////////////////////////
   const[editable,setEditable]= useState({
@@ -112,12 +116,12 @@ export default function InformationClient({navigation,route}) {
   })
   /////////////////////////////////////////////////
   const putClient = (data)=>{
-    const selected = doc(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/customers", id)
+    const selected = doc(getFirestore(), "users/"+userProfile+"/customers", id)
     putFirestore(selected,data)
   }
   
   const deleteClient = ()=>{
-    const selected = doc(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/customers", id)
+    const selected = doc(getFirestore(), "users/"+userProfile+"/customers", id)
     deleteFirestore(selected)
   }
 
@@ -138,6 +142,7 @@ export default function InformationClient({navigation,route}) {
     Alert.alert("Cliente Actualizado");
     navigation.navigate("Home")
   }
+  console.log("------------------------")
   return (
         <LinearGradient 
                 colors={[ '#F1F4F4','#DADEDF']}
@@ -177,6 +182,7 @@ export default function InformationClient({navigation,route}) {
               <Text style = {styles.text}> Ubicacion: {editable.location}</Text>
               <Editar dato={"location"}setState={setDato} stateModal={setModal}/>
             </LinearGradient>
+            <TouchableOpacity onPress={() => navigation.navigate("Ventas",{idClient:id})}>
             <LinearGradient 
               colors={colorB}
               start={{x:1,y:0}}
@@ -184,6 +190,7 @@ export default function InformationClient({navigation,route}) {
               style={styles.button}>       
               <Text style = {styles.textButton}>Historial de Ventas</Text>
             </LinearGradient>
+            </TouchableOpacity>
             <LinearGradient 
               colors={colorB}
               start={{x:1,y:0}}

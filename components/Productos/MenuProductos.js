@@ -3,7 +3,11 @@ import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native
 import { Icon } from 'react-native-gradient-icon';
 const {width, height} = Dimensions.get('window');
 const iconSize= 100;
+
 export default function MenuProductos({navigation}){
+    console.log("------------------------")
+    console.log("MenuProductos")
+    console.log("------------------------")
     return(
         <View style={styles.container}>
             <View style={styles.buttonContainer}>
@@ -43,7 +47,7 @@ export default function MenuProductos({navigation}){
             </TouchableOpacity>
             </View>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuProductos")}>
+            <TouchableOpacity style={styles.buttom} onPress={()=>console.log("varios")}>
                 <Icon  
                     size={iconSize}
                     colors={[

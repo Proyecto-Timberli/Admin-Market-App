@@ -8,7 +8,9 @@ import {useAuth} from '../../context/authContext'
 const {width, height} = Dimensions.get('window');
 
 function Login({navigation}){
-    const SvgComponent = () => (
+  console.log("------------------------")
+  console.log("Login")
+  const SvgComponent = () => (
         <Svg
           width={408}
           height={274}
@@ -37,22 +39,22 @@ function Login({navigation}){
             </LinearGradient>
           </Defs>
         </Svg>
-    )
-    //////////////////////////////////////////////////////////////
-    const {user} = useAuth()
-    //////////////////////////////////////////////////////////////
-    const initalState = {
-      email: "",
-      password: "",
-    };
+  )
+  //////////////////////////////////////////////////////////////
+  const {user} = useAuth()
+  //////////////////////////////////////////////////////////////
+  // const initalState = null
   
-    const [state, setState] = useState(initalState);
+  const [state, setState] = useState({
+    email: "",
+    password: "",
+  });
   
-    const handleChangeText = (value, name) => {
-      setState({ ...state, [name]: value });
-    };
-    const {login, loginWithGoogle} = useAuth()
-    const handleSubmit = async () => {
+  const handleChangeText = (value, name) => {
+    setState({ ...state, [name]: value });
+  };
+  const {login, loginWithGoogle} = useAuth()
+  const handleSubmit = async () => {
       try{
         await login(state.email, state.password)
         navigation.navigate("Home")
@@ -61,8 +63,8 @@ function Login({navigation}){
         console.log(error.message)
       }
       
-    };
-    const handleGoogleLogin = async () => {
+  };
+  const handleGoogleLogin = async () => {
       try{
         await loginWithGoogle()
         navigation.navigate("Home")
@@ -70,12 +72,17 @@ function Login({navigation}){
       catch(error){
         console.log(error.message)
       }
-    }
-  /////////Protected Screen
-  if (user){
-      return navigation.navigate("MenuPrincipal")
   }
-  /////////Protected Screen
+
+  useEffect(() => {
+    if (user){
+      navigation.navigate("Starting")
+    }
+  },[user])
+
+ 
+
+  console.log("------------------------")
     return (
         <View style={styles.container}> 
             <SvgComponent style={styles.containerSVG}/>

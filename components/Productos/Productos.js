@@ -1,51 +1,65 @@
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator,Dimensions,FlatList,StyleSheet,TextInput,TouchableOpacity,View,Text} from "react-native";
-import CardProducto from "./Card-Producto";
-import axios from 'axios'
-import CategoriesSelect from './Buscar/FIltro Categorias/FiltroCategorias'
-import ModificarVarios from './Buscar/ModificarVarios'
-import { LinearGradient } from 'expo-linear-gradient';
-const {width, height} = Dimensions.get('window');
 
-const Loading =()=>{
-  return (
-    <View style={[styles.Loading]}>
-      <ActivityIndicator size="large" />
-    </View>
-  )
-}
+import React, { useEffect, useState } from "react";
+import {Dimensions,FlatList,StyleSheet,TextInput,TouchableOpacity,View,Text} from "react-native";
+////////////////////////////////////////////////////
+import {useAuth} from '../../context/authContext'
+import {getFirestore, collection, getDocs} from 'firebase/firestore';
+////////////////////////////////////////////////////
+import CardProducto from "./Card-Producto";
+import ModificarVarios from './Buscar/ModificarVarios'
+import CategoriesSelect from './Buscar/FIltro Categorias/FiltroCategorias'
+import Loading from '../../functions/Loading'
+import BarCode from '../BarCode/BarCode'
+import BarCodeIcon from '../BarCode/BarCodeIcon'
+////////////////////////////////////////////////////
+const {width, height} = Dimensions.get('window');
+////////////////////////////////////////////////////
+import { LinearGradient } from 'expo-linear-gradient';
+////////////////////////////////////////////////////
+
 const Productos = ({navigation}) => {
-  const baseUrl = "https://admin-market-api.herokuapp.com" ;
-  const [productosApi,setProductosApi]= useState(null)
-  const peticionProductos=()=>{
-      axios.get(baseUrl+"/api/product"
-      )
-      .then(function (response) {
-          setProductosApi(response.data);
-      })
-      .catch(function (error) {
-          console.log(error);
-      });
+  console.log("------------------------")
+  console.log("Productos")
+    const {userProfile} = useAuth()
+    /////////////////////////////////////////////////////
+    const [productsApi,setProductsApi]=useState(null)
+    const getProducts =  ()=>{
+      const selectedC = collection(getFirestore(), "users/"+userProfile+"/products")
+        getDocs(selectedC)
+        .then(res => setProductsApi(res.docs.map(product=>({id:product.id,...product.data()}))))
+        .catch(function(error) {
+          console.log('There has been a problem with your fetch operation: ' + error.message);
+        })
+    }
+   
+    useEffect(() => {
+      getProducts()
+    },[]);
+    let arrayAMostrar = productsApi;
+  /////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////
+  //Funcion Filtro Scann
+  const [scannOn,setScannOn]=useState(false)
+  const [filterScanned,setFilterScanned]=useState(null)
+  function filtroScann(code) {
+    if (!productsApi){return} 
+    if (!code){return setFilterScanned(null)}
+    return (
+      setFilterScanned(productsApi.filter((e) =>e.barCode && e.barCode.includes(code)))     
+    )
   }
-  useEffect(() => {
-      peticionProductos()
-  },[]);
-  /////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////
-  let arrayAMostrar = productosApi;
+  if (filterScanned){
+      arrayAMostrar=filterScanned
+  }
   /////////////////////////////////////////////////////
   /////////////////////////////////////////////////////
   //Funcion Filtro catgorias
   const [filtroCategoria,setFiltroCategoria]= useState(null)
   function filtroCategory(category) {
-    if (!productosApi){return} 
+    if (!productsApi){return} 
     if (!category){return setFiltroCategoria(null)}
     return (
-      setFiltroCategoria(productosApi.filter((e) =>e.categories[0] && e.categories[0].includes(category))),
-      console.log("filtrado......................."),
-      console.log(productosApi.filter((e) =>e.categories[0] && e.categories[0].includes(category))),
-      // console.log(productosApi),
-      console.log("filtrado.......................")
+      setFiltroCategoria(productsApi.filter((e) =>e.category && e.category.includes(category)))     
     )
   }
   if (filtroCategoria){
@@ -106,7 +120,7 @@ const Productos = ({navigation}) => {
       }
     }
   }
-  
+  console.log("------------------------")
   /////////////////////////////////////////////////////
   
     return (
@@ -115,18 +129,23 @@ const Productos = ({navigation}) => {
                 start={{x:1,y:0}}
                 end={{x:0,y:1}}
                 style={{width:width,height:height}}>
+        {scannOn&&<BarCode codeFunction={filtroScann}setActive={setScannOn}/>}
+       
         <View style={styles.container}>
           <View style={styles.caja}>
-            <TextInput
-            style={styles.textInput}
-            onChangeText={(e) => filtroBusqueda(e)}
-            value={filterBySearch}
-            placeholder="Buscar..."
-            />
+            <View style={{width:width,flexDirection:"row",justifyContent: "space-around"}}>
+              <TextInput
+              style={styles.textInput}
+              onChangeText={(e) => filtroBusqueda(e)}
+              value={filterBySearch}
+              placeholder="Buscar..."
+              />
+              <TouchableOpacity onPress={()=>{setScannOn(true)}}><BarCodeIcon/></TouchableOpacity>
+            </View>
             <CategoriesSelect filtrar={filtroCategory}/>
-            <ModificarVarios estado={seleccionarVarios} listaSeleccionados={arraySeleccionados} setListaSeleccionados={setArraySeleccionados} listaCompleta={arrayAMostrar} recargarLista={peticionProductos} navigation={navigation}/>
+            <ModificarVarios estado={seleccionarVarios} listaSeleccionados={arraySeleccionados} setListaSeleccionados={setArraySeleccionados} listaCompleta={arrayAMostrar} recargarLista={getProducts} navigation={navigation}/>
           </View>
-          {!productosApi?<Loading/>:
+          {!productsApi?<Loading/>:
           <FlatList
             data={arrayAMostrar}
             keyExtractor={(item) => item.id}
@@ -139,7 +158,7 @@ const Productos = ({navigation}) => {
                     key={item.id}
                     id={item.id}
                     nombre={item.name}
-                    categoria={item.categories[0]}
+                    categoria={item.category}
                     precio={item.price}
                     listaSeleccionados={arraySeleccionados}
                   />
@@ -165,7 +184,7 @@ const styles = StyleSheet.create({
   },
   textInput:{
     padding: 10,
-    paddingStart:30,
+    paddingStart:10,
     width:width*0.5,
     height:50,
     marginTop:20,

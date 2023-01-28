@@ -33,7 +33,7 @@ const CardProducto = (
     let productos = shopingCart
     for(let i=0;i<productos.length;i++){
         if(productos[i].id===id){
-            productos[i]={...productos[i],stock:productoSave[0].stock-productoCantidad[0].ammount}
+            productos[i]={...productos[i],stock:productoSave[0].stock-productoCantidad[0].amount}
         }
     }
     setShopingCart(productos)  

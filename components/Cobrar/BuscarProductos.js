@@ -2,10 +2,8 @@
 import React, {useEffect, useState } from "react";
 import {ActivityIndicator, Dimensions, FlatList, Alert, StyleSheet,TextInput,TouchableOpacity,View,Text,} from "react-native";
 ////////////////////////////////////////////////////
-import axios from 'axios'
-const baseUrl = "https://admin-market-api.herokuapp.com" ;
+import {useAuth} from '../../context/authContext'
 import {getFirestore, collection, getDocs} from 'firebase/firestore';
-import {postFirestore} from '../../functions/apiFunctions'
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,34 +28,21 @@ const Loading =()=>{
     )
   }
 export default function BucarProductos({ route, navigation }){
-    ///////////////////////////////////////////////////// 
+    console.log("------------------------")
+    console.log("BucarProductos")
+    const {userProfile} = useAuth()
     /////////////////////////////////////////////////////
-    const baseUrl = "https://admin-market-api.herokuapp.com" ;
-    const [productosApi,setProductosApi]= useState(null)
-    const peticionProductos=()=>{
-        axios.get(baseUrl+"/api/product"
-        )
-        .then(function (response) {
-            setProductosApi(response.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-    }
     const [productsApi,setProductsApi]=useState(null)
-    
     const getProducts =  ()=>{
-      const selectedC = collection(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/products")
+      const selectedC = collection(getFirestore(), "users/"+userProfile+"/products")
         getDocs(selectedC)
         .then(res => setProductsApi(res.docs.map(sale=>({id:sale.id,...sale.data()}))))
     }
    
     useEffect(() => {
-        peticionProductos()
-        getProducts()
+        getProducts() 
     },[]);
     let arrayAMostrar = productsApi;
-
     /////////////////////////////////////////////////////
     /////////////////////////////////////////////////////
     const [filtroCategoria,setFiltroCategoria]= useState(null)
@@ -104,6 +89,7 @@ export default function BucarProductos({ route, navigation }){
       merge: true,
     });}
    /////////////////////////////////////////////////////
+   console.log("------------------------")
    /////////////////////////////////////////////////////
     return(
         <LinearGradient 
@@ -121,14 +107,12 @@ export default function BucarProductos({ route, navigation }){
             />
             <CategoriesSelect filtrar={filtroCategory}/>
           </View>
-          {!productosApi?<Loading/>:
+          {!productsApi?<Loading/>:
             <FlatList
                 data={arrayAMostrar}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => {
                     return (
-                        // <TouchableOpacity
-                        //     onPress={() => handlerStateFunction(item)}>
                             <CardProducto
                                 key={item.id}
                                 id={item.id}
@@ -138,7 +122,6 @@ export default function BucarProductos({ route, navigation }){
                                 product={item}
                                 onPress={addToCart}
                             />
-                        // </TouchableOpacity>
                     );
                 }}
             />}

@@ -6,6 +6,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
 ////////////////////////////////////////////////////
+import {useAuth} from '../../context/authContext'
 import {getFirestore, collection} from 'firebase/firestore';
 import {postFirestore} from '../../functions/apiFunctions'
 ////////////////////////////////////////////////////
@@ -102,6 +103,7 @@ function Editar({dato, setState, stateModal }){
 }
 
 export default function AddClient({navigation}) {
+  const {userProfile} = useAuth()
   /////////////////////////////////////////////////
   const[editable,setEditable]= useState({
     identifier: "",
@@ -110,7 +112,7 @@ export default function AddClient({navigation}) {
   })
   /////////////////////////////////////////////////
   const postClient = (data)=>{
-    const selectedCollection = collection(getFirestore(), "users/qDcRzymTV7Op7jTwyZdeu7TxhUM2/customers")
+    const selectedCollection = collection(getFirestore(), "users/"+userProfile+"/customers")
     postFirestore(selectedCollection,data)
   }
   /////////////////////////////////////////////////
@@ -128,7 +130,7 @@ export default function AddClient({navigation}) {
     postClient(editable)
     console.log("agregar")
     Alert.alert("Cliente Agregado");
-    navigation.navigate("Home")
+    navigation.navigate("MenuPrincipal")
   }
   return (
         <LinearGradient 

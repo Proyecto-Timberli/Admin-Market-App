@@ -1,12 +1,17 @@
 import React, {useState } from "react";
 import { Dimensions,TextInput, Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 ////////////////////////////////////////////////////
-import axios from 'axios'
-const baseUrl = "https://admin-market-api.herokuapp.com" ;
+import {useAuth} from '../../context/authContext'
+import {getFirestore, collection, getDocs} from 'firebase/firestore';
+import {postFirestore} from '../../functions/apiFunctions'
 ////////////////////////////////////////////////////
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
+
+import BarCode from '../BarCode/BarCode'
+import BarCodeIcon from '../BarCode/BarCodeIcon'
+
 const {width, height} = Dimensions.get('window');
 ////////////////////Colors//////////////////////////
 const iconSize= 50;
@@ -91,58 +96,58 @@ function Editar({dato, setState, stateModal }){
   )
 }
 
-
-
 export default function AgregarUno({navigation}) {
+  console.log("------------------------")
+  console.log("AgregarUno")
+  const {userProfile}= useAuth()
   /////////////////////////////////////////////////
   const[editable,setEditable]= useState({
     name: "",
     price: "",
     stock : "",
-    categoriesids: "",
+    category: "",
     make: "",
-    // precioAnterior : "",
     buyprice: "",
-    // codigo : "",
-    // description: "",
-    // imagen : "",
+    barCode : "",
+    description: "",
+    image : "",
   })
   /////////////////////////////////////////////////
   const[modal,setModal]= useState(false)
   const[dato,setDato]= useState(false)
   const[modalSalir,setModalSalir]= useState(false)
+  const [scannOn,setScannOn]=useState(false)
   const salir = () => {
     console.log("salir")
     setModalSalir(true)
   }
   /////////////////////////////////////////////////
-  const postProductos=(productos)=>{
-      axios.post(baseUrl+"/api/product",productos
-      )
-      .then(function (response) {
-          console.log(response.data);
-      })
-      .catch(function (error) {
-          console.log(error);
-      });
+   const postProducts = (data)=>{
+    const selectedCollection = collection(getFirestore(), "users/"+userProfile+"/products")
+    postFirestore(selectedCollection,data)
   }
   /////////////////////////////////////////////////
-  /////////////////////////////////////////////////
   const agregar = () => {
-    postProductos({products:[editable]})
-    console.log("agregar")
+    postProducts(editable)
     Alert.alert("Producto agregado")
     navigation.navigate("MenuProductos")
   }
-  
   /////////////////////////////////////////////////
+  const copyCode = (code) => {
+    setEditable({
+      ...editable,
+      barCode:code
+    })
+  }
   /////////////////////////////////////////////////
+  console.log("------------------------")
   return (
     <LinearGradient 
       colors={colorBackgroundModal}
       start={{x:1,y:0}}
       end={{x:0,y:1}}
       style={{width:width,height:height}}>
+      {scannOn&&<BarCode codeFunction={copyCode}setActive={setScannOn}/>}
       <View style={styles.container}>
         {modal&&<Modal dato={dato} state={editable} setState={setEditable} stateModal={setModal}/>}
         {modalSalir&&<ModalSalir navigation={navigation}stateModal={setModalSalir}/>}
@@ -182,8 +187,8 @@ export default function AgregarUno({navigation}) {
           start={{x:1,y:0}}
           end={{x:0,y:1}}
           style={styles.cotainerIcon}> 
-          <Text style = {styles.text}> Categoria: {editable.categoriesids}</Text>
-          <Editar dato={"categoriesids"}setState={setDato} stateModal={setModal}/>
+          <Text style = {styles.text}> Categoria: {editable.category}</Text>
+          <Editar dato={"category"}setState={setDato} stateModal={setModal}/>
         </LinearGradient>
 
         <LinearGradient 
@@ -200,15 +205,6 @@ export default function AgregarUno({navigation}) {
           start={{x:1,y:0}}
           end={{x:0,y:1}}
           style={styles.cotainerIcon}> 
-          <Text style = {styles.text}> Precio anterior: {editable.precioAnterior} </Text>
-          <Editar dato={"precioAnterior"}setState={setDato} stateModal={setModal}/>
-        </LinearGradient>
-
-        <LinearGradient 
-          colors={colorA}
-          start={{x:1,y:0}}
-          end={{x:0,y:1}}
-          style={styles.cotainerIcon}> 
           <Text style = {styles.text}> Precio de compra: {editable.buyprice} </Text>
           <Editar dato={"buyprice"}setState={setDato} stateModal={setModal}/>
         </LinearGradient>
@@ -218,8 +214,9 @@ export default function AgregarUno({navigation}) {
           start={{x:1,y:0}}
           end={{x:0,y:1}}
           style={styles.cotainerIcon}> 
-          <Text style = {styles.text}> Codigo: {editable.codigo} </Text>
-          <Editar dato={"codigo"}setState={setDato} stateModal={setModal}/>
+          <Text style = {{...styles.text,width:width*0.7}}> Codigo: {editable.barCode} </Text>
+          <TouchableOpacity onPress={()=>{setScannOn(true)}}><BarCodeIcon size={30}/></TouchableOpacity>
+          <Editar dato={"barCode"}setState={setDato} stateModal={setModal}/> 
         </LinearGradient>
 
         <LinearGradient 
@@ -227,7 +224,7 @@ export default function AgregarUno({navigation}) {
           start={{x:1,y:0}}
           end={{x:0,y:1}}
           style={styles.cotainerIcon}> 
-          <Text style = {styles.text}> Informacion: {editable.description} </Text>
+          <Text style = {styles.text}> Descripcion: {editable.description} </Text>
           <Editar dato={"description"}setState={setDato} stateModal={setModal}/>
           </LinearGradient>
 
@@ -236,7 +233,7 @@ export default function AgregarUno({navigation}) {
           start={{x:1,y:0}}
           end={{x:0,y:1}}
           style={styles.cotainerIcon}> 
-          <Text style = {styles.text}> Imagen: {editable.imagen} </Text>
+          <Text style = {styles.text}> Imagen: {editable.image} </Text>
           <Editar dato={"imagen"}setState={setDato} stateModal={setModal}/>
         </LinearGradient>
           <View style = {styles.containerNavBar}>   
