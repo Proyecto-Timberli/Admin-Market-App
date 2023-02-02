@@ -27,16 +27,25 @@ const {width, height} = Dimensions.get('window');
 const UserSelection = ({navigation})=>{
     console.log("------------------------")
     console.log("UserSelection")
-    const {user} = useAuth()
+   
     const [codeUser, setCodeUser] = useState("")
     const [modal,setModal]=useState(false)
     const [barCodeActive,setBarCodeActive]= useState(false)
+
+
+    const selectCode = (value)=>{
+        setCodeUser(value)
+        navigation.navigate("Link-Profile-To-User",{userCode:value})
+        
+    }
+    // navigation.navigate("Ventas",{idClient:id})
+    // const idClient = route.params? route.params.idClient: null
     
     console.log("------------------------")
     return (
         <>
-        {barCodeActive&&<BarCode codeFunction={setCodeUser}setActive={setBarCodeActive}/>}
-        {modal? <ModalInput inputValueStr={codeUser}setStateModal={setModal} functionCheckOk={setCodeUser}/>:
+        {barCodeActive&&<BarCode codeFunction={selectCode}setActive={setBarCodeActive}/>}
+        {modal? <ModalInput inputValueStr={codeUser}setStateModal={setModal} functionCheckOk={selectCode}/>:
         <View style={styles.container}>
              
             <TouchableOpacity 

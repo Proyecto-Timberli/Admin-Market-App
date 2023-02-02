@@ -61,7 +61,7 @@ const ConfigProfile = ({navigation})=>{
         if(permissions.name){
             postProfileForUsers(permissions)
             Alert.alert("Perfil Agregado")
-            navigation.navigate("Link-Profile-To-User")
+            navigation.navigate("MyBusiness")
         }else{Alert.alert("Complete los campos")}
     }
     const [modal,setModal]=useState(false)
