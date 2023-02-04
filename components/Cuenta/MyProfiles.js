@@ -8,7 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Icon } from 'react-native-gradient-icon';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 const {width, height} = Dimensions.get('window');
-function Modal({stateModal}){
+function Modal({stateModal,navigation,getProfilesApi}){
     const {user} = useAuth()
     const [name, setName]=useState(null)
     const postMyBusinessProfile = (name)=>{
@@ -22,6 +22,8 @@ function Modal({stateModal}){
     function checkOk(){
       postMyBusinessProfile(name)
       stateModal(false)
+      getProfilesApi()
+      navigation.navigate("LoadingScreen",{destiny:"MyProfiles"})
     }
     function exit(){
       stateModal(false)
@@ -47,9 +49,10 @@ function Modal({stateModal}){
       </View>
     )
   }
-const MyProfiles=({navigation})=>{
+const MyProfiles=({route,navigation})=>{
     console.log("------------------------")
     console.log("MyProfiles")
+    
     const {user,changedProfile} = useAuth()
     const [modal,setModal]= useState(false)
     /////////Protected Screen
@@ -60,12 +63,15 @@ const MyProfiles=({navigation})=>{
     },[])
     /////////Protected Screen
     const [myProfilesApi,setMyProfilesApi]= useState(null)
-    useEffect(() => {
-        const selectedCollection= collection(getFirestore(), "users/"+user.uid+"/myProfiles")
+    const getProfilesApi = ()=>{
+      const selectedCollection= collection(getFirestore(), "users/"+user.uid+"/myProfiles")
         getDocs(selectedCollection).then(res => setMyProfilesApi(res.docs.map(profile=>({id:profile.id,...profile.data()}))))
         .catch(function(error) {
           console.log('There has been a problem with your fetch operation: ' + error.message);
         })
+    }
+    useEffect(() => {
+      getProfilesApi()
     },[])
 
     const [hasProfile,setHasProfile]= useState([1])
@@ -81,7 +87,7 @@ const MyProfiles=({navigation})=>{
    
     return( 
         <View style={styles.container}>
-        {modal&&<Modal stateModal={setModal}/>}
+        {modal&&<Modal stateModal={setModal} navigation={navigation} getProfilesApi={getProfilesApi}/>}
         <Text style={{
             marginTop:"15%",
             fontSize: 25,

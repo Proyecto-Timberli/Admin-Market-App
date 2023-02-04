@@ -18,10 +18,10 @@ const iconColorB="#25EADE"
 
 const {width, height} = Dimensions.get('window');
 
-function Editar({setActive}){
+function Editar({setActive,setActiveModal}){
   
   const handleChange = ()=>{
-    
+    setActiveModal(true)
     setActive(true)
   }
   
@@ -39,7 +39,7 @@ function Editar({setActive}){
     
   )
 }
-export default function ModalEditar({dato, state, setState,}){
+export default function ModalEditar({dato, state, setState,setActiveModal}){
     const [editado, setEditado]= useState(state[dato])
     const [active, setActive]= useState(false)
     function modalHandler(e){
@@ -50,16 +50,18 @@ export default function ModalEditar({dato, state, setState,}){
         ...state,
         [dato]:editado
       })
-      stateModal(false)
+      setActiveModal(false)//tapa a el componente que llama a el modal
+      setActive(false)
       
     }
     function exit(){
+      setActiveModal(false)
       setActive(false)
       
     }
     return (
       <>
-        {!active?<Editar setActive={setActive} />:
+        {!active?<Editar setActive={setActive} setActiveModal={setActiveModal}/>:
         <View style={styles.container}>
         <LinearGradient 
             colors={[ '#F8E9E9','#B9C7CA']}

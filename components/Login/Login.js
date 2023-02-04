@@ -57,7 +57,7 @@ function Login({navigation}){
   const handleSubmit = async () => {
       try{
         await login(state.email, state.password)
-        navigation.navigate("Home")
+        navigation.navigate("Starting")
       }
       catch(error){
         console.log(error.message)
@@ -67,7 +67,7 @@ function Login({navigation}){
   const handleGoogleLogin = async () => {
       try{
         await loginWithGoogle()
-        navigation.navigate("Home")
+        navigation.navigate("Starting")
       }
       catch(error){
         console.log(error.message)

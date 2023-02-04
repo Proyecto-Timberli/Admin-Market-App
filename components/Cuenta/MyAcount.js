@@ -17,6 +17,7 @@ const MyAcount=({navigation})=>{
     const {user, logout, loading} = useAuth()
     const handleLogout = async ()=>{
         await logout()
+        navigation.navigate("Login")
     }
     /////////Protected Screen
     useEffect(() => {

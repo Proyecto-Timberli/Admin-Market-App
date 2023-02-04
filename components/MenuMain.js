@@ -36,7 +36,7 @@ import MyAcount from './Cuenta/MyAcount';
 import MyBusiness from './Cuenta/MyBusiness';
 import ConfigProfile from './Cuenta/ConfigProfile'
 import UserSelection from './Cuenta/UserSelection'
-
+import LoadingScreen from './Reutilizables/LoadingScren'
 
 const {width, height} = Dimensions.get('window');
 const Stack = createNativeStackNavigator();
@@ -205,7 +205,10 @@ export default function MenuMain(){
                 name="Provider-info"
                 component={InformationProvider}
                 />
-
+                <Stack.Screen
+                name="LoadingScreen"
+                component={LoadingScreen}
+                />
 
             
               

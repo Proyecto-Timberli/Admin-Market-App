@@ -1,12 +1,9 @@
 import React, { useEffect,useState} from "react";
-import {postFirestoreId} from '../../functions/apiFunctions'
-import {useAuth} from '../../context/authContext'
-import {getFirestore,doc, getDoc} from 'firebase/firestore';
 import Loading from '../../functions/Loading'
-import { TextInput, StyleSheet, Text, View, Dimensions, TouchableOpacity} from 'react-native';
+import { StyleSheet,  View, Dimensions} from 'react-native';
 import Svg, {Path, Defs, LinearGradient, Stop} from 'react-native-svg';
 const {width, height} = Dimensions.get('window');
-const Starting =  ({navigation})=> {
+const LoadingScreen =  ({route,navigation,})=> {
     const SvgComponent = () => (
         <Svg
           width={408}
@@ -37,33 +34,15 @@ const Starting =  ({navigation})=> {
           </Defs>
         </Svg>
     )
-    console.log("------------------------")
-    console.log("Starting")
-    const {user} = useAuth()
-    const [state,setState]=useState(null)
-    const postUser =()=>{
-        const docRef =doc(getFirestore(),"users/"+user.uid)
-        getDoc(docRef).then(res => setState(res.data()))
-        
-    }
-    useEffect(() => {
-        console.log("Inicializando Cuenta")
-        if (user){   postUser()  }
-    },[])
-    useEffect(() => {
-        if (user){                                
-            if(!state?.identifier){
-                const docRef =doc(getFirestore(),"users/"+user.uid)
-                postFirestoreId(docRef,{identifier:user.email})
-                navigation.navigate("MyProfiles")
+    const destiny=route.params?.destiny
 
-            }else{
-                console.log(state)
-                navigation.navigate("MyProfiles")
-            }
-            
+    useEffect(() => {
+        console.log("Loading...")
+        if (route.params){
+            setTimeout(()=>{navigation.navigate(destiny)},4000)
         }
-    },[state])
+    },[])
+   
     console.log("------------------------")
     return (
         <View style={styles.container}> 
@@ -108,4 +87,4 @@ const styles= StyleSheet.create({
     },
 })
 
-export default Starting
+export default LoadingScreen
