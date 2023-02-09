@@ -82,29 +82,33 @@ function Modal({dato, state, setState, stateModal}){
   )
 }
 function Editar({dato, setState, stateModal }){
+  const {userPermissions} = useAuth() 
   const edit = ()=>{
     setState(dato)
     console.log("edit "+ dato)
     stateModal(true)
   }
   return (
-    <TouchableOpacity
-      onPress={()=> edit()}>
-      <Icon  
-          size={25}
-          colors={[
-            {color:"#206593",offset:"0",opacity:"1"},
-            {color:"#25EADE",offset:"1",opacity:"1"},
-          ]}
-          name="pencil" type="material-community" /> 
-    </TouchableOpacity>
-    
+    <>
+      {userPermissions.modifyClients?
+      <TouchableOpacity
+        onPress={()=> edit()}>
+        <Icon  
+            size={25}
+            colors={[
+              {color:"#206593",offset:"0",opacity:"1"},
+              {color:"#25EADE",offset:"1",opacity:"1"},
+            ]}
+            name="pencil" type="material-community" /> 
+      </TouchableOpacity>:null}
+    </>
   )
 }
 
 export default function InformationClient({navigation,route}) {
   console.log("------------------------")
   console.log("InformationClient")
+  const {userPermissions} = useAuth() 
   const {userProfile} = useAuth()
   const {id, identifier, phone, location} = route.params
   /////////////////////////////////////////////////
@@ -201,7 +205,7 @@ export default function InformationClient({navigation,route}) {
             
           
             <View style = {styles.containerNavBar}>   
-            <TouchableOpacity  onPress={()=>eliminar()}>
+            {userPermissions.modifyClients?<TouchableOpacity  onPress={()=>eliminar()}>
                 <Icon  
                     size={iconSize}
                     colors={[
@@ -210,7 +214,7 @@ export default function InformationClient({navigation,route}) {
                     ]}
                     name="delete-forever" type="material-community" />  
                     <Text style={styles.textNavBar}>Eliminar</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>:null}
             <TouchableOpacity  onPress={() => navigation.navigate("MenuPrincipal")}>
                 <Icon  
                     size={iconSize}
@@ -221,7 +225,7 @@ export default function InformationClient({navigation,route}) {
                     name="home" type="material-community" />  
                     <Text style={styles.textNavBar}>Home</Text>
             </TouchableOpacity>
-            <TouchableOpacity  onPress={()=>guardar()}>
+            {userPermissions.modifyClients?<TouchableOpacity  onPress={()=>guardar()}>
                 <Icon  
                     size={iconSize}
                     colors={[
@@ -230,7 +234,7 @@ export default function InformationClient({navigation,route}) {
                     ]}
                     name="content-save" type="material-community" />  
                     <Text style={styles.textNavBar} >Guardar</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>:null}
             </View>
             
       </View>

@@ -10,7 +10,7 @@ const Cuenta=({navigation})=>{
     const {user, logout, loading} = useAuth()
     const handleLogout = async ()=>{
         await logout()
-        return navigation.navigate("Login")
+        navigation.navigate("Login")
     }
     /////////Protected Screen
     useEffect(() => {
@@ -27,16 +27,7 @@ const Cuenta=({navigation})=>{
     },[])
     /////////Protected Screen
     console.log("------------------------")
-    // return( 
-    //     <View style={{flex:1, justifyContent: 'center',alignItems: 'center'}}>
-    //         <Text style={{color:"black"}}>cuenta: {user.email}</Text>
-    //         <Text style={{color:"black"}}>code: {user.uid}</Text>
-    //         <TouchableOpacity onPress={()=> handleLogout()}><Text>LogOut</Text></TouchableOpacity>  
-    //         <TouchableOpacity onPress={()=> navigation.navigate("MyProfiles")}><Text>Mis Perfiles</Text></TouchableOpacity>  
-    //         <TouchableOpacity onPress={()=> navigation.navigate("Profiles")}><Text style={{color:"black"}}>Administrar perfiles de negocio para los usuarios</Text></TouchableOpacity>
-    //         <Text style={{color:"black"}}></Text>
-    //     </View>     
-    // )
+
     return(
         <View style={styles.container}>
        

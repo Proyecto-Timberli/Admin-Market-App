@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import { Icon } from 'react-native-gradient-icon';
+import {useAuth} from '../../context/authContext'
 const {width, height} = Dimensions.get('window');
 const iconSize= 100;
 
@@ -8,6 +9,7 @@ export default function MenuProductos({navigation}){
     console.log("------------------------")
     console.log("MenuProductos")
     console.log("------------------------")
+    const {userPermissions} = useAuth() 
     return(
         <View style={styles.container}>
             <View style={styles.buttonContainer}>
@@ -22,32 +24,32 @@ export default function MenuProductos({navigation}){
                     <Text style={styles.text}>Buscar Producto</Text>
             </TouchableOpacity>
             </View>
+            {userPermissions.modifyProducts?<View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Categorias")}>
+                    <Icon  
+                        size={iconSize}
+                        colors={[
+                            {color:"#206593",offset:"0",opacity:"1"},
+                            {color:"#25EADE",offset:"1",opacity:"1"},
+                        ]}
+                        name="shape" type="material-community" />  
+                        <Text style={styles.text}>Categorias</Text>
+                </TouchableOpacity>
+            </View>:<View style={styles.buttonContainer}></View>}
+            {userPermissions.modifyProducts?<View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("AgregarUno")}>
+                    <Icon  
+                        size={iconSize}
+                        colors={[
+                            {color:"#206593",offset:"0",opacity:"1"},
+                            {color:"#25EADE",offset:"1",opacity:"1"},
+                        ]}
+                        name="plus-box" type="material-community" />  
+                        <Text style={styles.text}>Agregar Producto</Text>
+                </TouchableOpacity>
+            </View>:<View style={styles.buttonContainer}></View>}
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Categorias")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="shape" type="material-community" />  
-                    <Text style={styles.text}>Categorias</Text>
-            </TouchableOpacity>
-            </View>
-            <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("AgregarUno")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="plus-box" type="material-community" />  
-                    <Text style={styles.text}>Agregar Producto</Text>
-            </TouchableOpacity>
-            </View>
-            <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={()=>console.log("varios")}>
+            {/* <TouchableOpacity style={styles.buttom} onPress={()=>console.log("varios")}>
                 <Icon  
                     size={iconSize}
                     colors={[
@@ -56,7 +58,7 @@ export default function MenuProductos({navigation}){
                     ]}
                     name="plus-box-multiple" type="material-community" />  
                     <Text style={styles.text}>Agregar Productos</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             </View>
         </View>
     );

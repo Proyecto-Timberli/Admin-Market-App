@@ -122,20 +122,26 @@ export default function MenuCobrar({route,navigation}){
     }
     
     function registar(ventar=venta, productos=shopingCart){
-        let postVentar =  {
-            idClient:client?.id?client.id:null,
-            client:client?.identifier?client.identifier:null,
-            total:total,
-            sellProducts:ventar,
-            createdDate:Timestamp.now().toDate().toString(),
-            wayToPay:wayToPays?wayToPays:null
+        if(!ventar[0]){
+            Alert.alert("No hay venta para registrar")
+        }else{
+            let postVentar =  {
+                idClient:client?.id?client.id:null,
+                client:client?.identifier?client.identifier:null,
+                total:total,
+                sellProducts:ventar,
+                createdDate:Timestamp.now().toDate().toString(),
+                wayToPay:wayToPays?wayToPays:null
+            }
+            postSale(postVentar)
+            putProductsStock(productos)
+            limpiar()
+            navigation.navigate("MenuPrincipal")
+            // arreglar esto nos tiene que llevar a las ventas o al resumen
         }
-        postSale(postVentar)
-        putProductsStock(productos)
-        limpiar()
-        navigation.navigate("MenuPrincipal")
-        // arreglar esto nos tiene que llevar a las ventas o al resumen
-    }
+            
+        }
+       
 
   
     /////////////////////////////////////////////////////
@@ -186,8 +192,14 @@ export default function MenuCobrar({route,navigation}){
     const limpiar = ()=> {
         setShopingCart([])
         setShopingCartSave([])
+        setVenta([])
         setWayToPays(null)
         setClient(null)
+    }
+        //////////////////////////////////////////////////////////
+    //hacer global
+    function financial(x) {
+        return Number.parseFloat(x).toFixed(2);
     }
     console.log("------------------------")
     /////////////////////////////////////////////////////
@@ -221,7 +233,7 @@ export default function MenuCobrar({route,navigation}){
                                 id={item.id}
                                 nombre={item.name}
                                 categoria={item.category}
-                                precio={item.price}
+                                precio={item.price?financial(item.price):null}
                                 product={item} 
                                 shopingCart={shopingCart}
                                 shopingCartSave={shopingCartSave}

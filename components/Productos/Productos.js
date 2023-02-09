@@ -17,16 +17,19 @@ const {width, height} = Dimensions.get('window');
 import { LinearGradient } from 'expo-linear-gradient';
 ////////////////////////////////////////////////////
 
+
 const Productos = ({navigation}) => {
   console.log("------------------------")
   console.log("Productos")
-    const {userProfile} = useAuth()
-    /////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////
+    const {userProfile} = useAuth() 
+  /////////////////////////////////////////////////////
     const [productsApi,setProductsApi]=useState(null)
     const getProducts =  ()=>{
       const selectedC = collection(getFirestore(), "users/"+userProfile+"/products")
         getDocs(selectedC)
-        .then(res => setProductsApi(res.docs.map(product=>({id:product.id,...product.data()}))))
+        .then(res => setProductsApi(res.docs.map(product=>({id:product.id,...product.data()})
+        )))
         .catch(function(error) {
           console.log('There has been a problem with your fetch operation: ' + error.message);
         })
@@ -36,6 +39,11 @@ const Productos = ({navigation}) => {
       getProducts()
     },[]);
     let arrayAMostrar = productsApi;
+    // useEffect(() => {
+    //   
+
+    // },[]);
+    
   /////////////////////////////////////////////////////
   /////////////////////////////////////////////////////
   //Funcion Filtro Scann
@@ -121,9 +129,15 @@ const Productos = ({navigation}) => {
     }
   }
   console.log("------------------------")
+  //////////////////////////////////////////////////////////
+  //hacer global
+  function financial(x) {
+    return Number.parseFloat(x).toFixed(2);
+  }
   /////////////////////////////////////////////////////
   
     return (
+      
       <LinearGradient 
                 colors={[ '#F1F4F4','#DADEDF']}
                 start={{x:1,y:0}}
@@ -159,7 +173,7 @@ const Productos = ({navigation}) => {
                     id={item.id}
                     nombre={item.name}
                     categoria={item.category}
-                    precio={item.price}
+                    precio={item.price?financial(item.price):null}
                     listaSeleccionados={arraySeleccionados}
                   />
                 </TouchableOpacity>

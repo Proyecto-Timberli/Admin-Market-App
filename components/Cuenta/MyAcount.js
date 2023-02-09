@@ -14,11 +14,8 @@ const iconSize= 100;
 const MyAcount=({navigation})=>{
     console.log("------------------------")
     console.log("MyAcount")
-    const {user, logout, loading} = useAuth()
-    const handleLogout = async ()=>{
-        await logout()
-        navigation.navigate("Login")
-    }
+    const {user,loading} = useAuth()
+  
     /////////Protected Screen
     useEffect(() => {
         if(loading){
@@ -97,18 +94,8 @@ const MyAcount=({navigation})=>{
                     <QrGenerator value={user.uid} size={170}/>
                 </View>
 
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.buttom} onPress={()=> handleLogout()}>
-                        <Icon  
-                            size={iconSize}
-                            colors={[
-                                {color:"#206593",offset:"0",opacity:"1"},
-                                {color:"#25EADE",offset:"1",opacity:"1"},
-                            ]}
-                            name="logout" type="material-community" />  
-                            <Text style={styles.text}>Logout</Text>
-                    </TouchableOpacity>
-                </View>
+
+                
             </View>
         </View>
     );

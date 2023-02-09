@@ -12,6 +12,7 @@ export function useAuth (){
 export function AuthProvider({children}){
     const [user, setUser] = useState(null)
     const [userProfile, setUserProfile] = useState(null)
+    const [userPermissions,setUserPermissions]=useState(null)
     const [loading, setLoading] = useState(true)
     const signup = (email , password ) => 
         createUserWithEmailAndPassword(auth, email, password);
@@ -22,11 +23,12 @@ export function AuthProvider({children}){
         const googleProvider =  new GoogleAuthProvider()
         return signInWithPopup(auth, googleProvider)
     }
-    const changedProfile = (uid)=>{
+    const changedProfile = (uid,profile)=>{
         console.log("------------------------")
         console.log("AuthProvider")
         console.log("changedProfile")
         console.log("------------------------")
+        setUserPermissions(profile)
         setUserProfile(uid)
     }
     useEffect(() => {
@@ -43,7 +45,7 @@ export function AuthProvider({children}){
         })
     },[])
     return (
-        <authContext.Provider value={{signup, login, user, logout, loading, loginWithGoogle,changedProfile,userProfile}}>
+        <authContext.Provider value={{signup, login, user, logout, loading, loginWithGoogle,changedProfile,userProfile,userPermissions}}>
              {children}
         </authContext.Provider>
     )

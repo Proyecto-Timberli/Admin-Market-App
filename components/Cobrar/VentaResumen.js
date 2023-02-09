@@ -40,17 +40,14 @@ const VentaResumen = ({route,navigation})=>{
     data.forEach(product=>{
         const selectedDoc = doc(getFirestore(), "users/"+userProfile+"/products", product.id)
         let productEdit=null
-        
         getDoc(selectedDoc).then(
-          res => console.log({id:res.id,...res.data()})
-        ).catch(function(error) {
+          res => {return({id:res.id,...res.data()})}).then(res=>putFirestore(selectedDoc,({...res,stock:res.stock+product.amount})))
+        .catch(function(error) {
           console.log('There has been a problem with your fetch operation: ' + error.message);
         })
-        // controlar stock a devolver
-        // productSave = {...product,stock: productSave.stock+product.amount}
-        putFirestore(selectedDoc,productSave)
     });
   }
+
  
 /////////////////////////////////////////////////////////
   
@@ -122,6 +119,10 @@ const VentaResumen = ({route,navigation})=>{
     const printer = await Print.selectPrinterAsync(); // iOS only
     setSelectedPrinter(printer);
   };
+      //hacer global
+      function financial(x) {
+        return Number.parseFloat(x).toFixed(2);
+      }
   console.log("------------------------")
   
 
@@ -158,9 +159,9 @@ const VentaResumen = ({route,navigation})=>{
                             end={{x:0,y:1}} 
                             style={styles.lista2}>
                                     <Text style={styles.text}>{item.name}</Text>
-                                    <Text style={styles.text}>Precio por unidad: {item.price}</Text>
+                                    <Text style={styles.text}>Precio por unidad: {item.price?financial(item.price):null}</Text>
                                     <Text style={styles.text}>Cantidad: {item.amount}</Text>
-                                    <Text style={styles.text}>Total Producto: {item.price*item.amount}</Text>
+                                    <Text style={styles.text}>Total Producto: {item.price?financial(item.price*item.amount):null}</Text>
                           </LinearGradient >            
                         );
                     }}

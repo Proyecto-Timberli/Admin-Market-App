@@ -128,9 +128,14 @@ export default function AgregarUno({navigation}) {
   }
   /////////////////////////////////////////////////
   const agregar = () => {
-    postProducts(editable)
-    Alert.alert("Producto agregado")
-    navigation.navigate("MenuProductos")
+    if(!editable.name){
+      Alert.alert("Complete los campos")
+    }else{
+      postProducts(editable)
+      Alert.alert("Producto agregado")
+      navigation.navigate("MenuProductos")
+    }
+    
   }
   /////////////////////////////////////////////////
   const copyCode = (code) => {

@@ -17,6 +17,7 @@ const Loading =()=>{
 const Customers= ({navigation,route}) => {
   console.log("------------------------")
   console.log("Customers")
+  const {userPermissions} = useAuth() 
   const {userProfile} = useAuth()
   const [customersApi,setCustomersApi]= useState(null)
   useEffect(() => {
@@ -72,15 +73,15 @@ const Customers= ({navigation,route}) => {
             value={filterBySearch}
             placeholder="Buscar cliente..."
             />
-            <TouchableOpacity onPress={()=>navigation.navigate("Add-client")}>
-            <LinearGradient 
-              colors={['#206593','#25EADE']}
-              start={{x:1,y:0}}
-              end={{x:0,y:1}}
-              style={styles.button}> 
-              <Text style = {styles.textButton}>Agregar Cliente</Text>
-            </LinearGradient>
-            </TouchableOpacity>
+            {userPermissions.modifyClients?<TouchableOpacity onPress={()=>navigation.navigate("Add-client")}>
+              <LinearGradient 
+                colors={['#206593','#25EADE']}
+                start={{x:1,y:0}}
+                end={{x:0,y:1}}
+                style={styles.button}> 
+                <Text style = {styles.textButton}>Agregar Cliente</Text>
+              </LinearGradient>
+            </TouchableOpacity>:null}
             <View style={{
               marginVertical:10,
               paddingHorizontal:10,

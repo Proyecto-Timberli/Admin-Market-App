@@ -71,6 +71,10 @@ export default function Ventas({route,navigation}){
         dataRender=filtro
     }
    /////////////////////////////////////////////////////
+    //hacer global
+  function financial(x) {
+    return Number.parseFloat(x).toFixed(2);
+  }
    console.log("------------------------")
    /////////////////////////////////////////////////////
     return(
@@ -103,7 +107,7 @@ export default function Ventas({route,navigation}){
                                 <CardVenta
                                     key={item.id+"p"}
                                     id={item.id}
-                                    total={item.total}
+                                    total={item.total?financial(item.total):null}
                                     fecha={item.createdDate}
                                     resumen={item.sellProducts}
                                     // client={item.client}

@@ -1,12 +1,15 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, } from 'react'
 import {getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc, addDoc} from 'firebase/firestore';
-import {Dimensions,FlatList,StyleSheet,TextInput,TouchableOpacity,View,Text} from "react-native";
+import {Dimensions,FlatList,StyleSheet,TextInput,TouchableOpacity,View,Text,BackHandler,Alert} from "react-native";
 import {postFirestoreId} from '../../functions/apiFunctions'
 import {useAuth} from '../../context/authContext'
 import Loading from '../../functions/Loading'
 import { LinearGradient } from 'expo-linear-gradient';
 import { Icon } from 'react-native-gradient-icon';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+
+
 const {width, height} = Dimensions.get('window');
 function Modal({stateModal,navigation,getProfilesApi}){
     const {user} = useAuth()
@@ -55,13 +58,7 @@ const MyProfiles=({route,navigation})=>{
     
     const {user,changedProfile} = useAuth()
     const [modal,setModal]= useState(false)
-    /////////Protected Screen
-    useEffect(() => {
-        if (!user){
-            return navigation.navigate("Login")
-        }
-    },[])
-    /////////Protected Screen
+
     const [myProfilesApi,setMyProfilesApi]= useState(null)
     const getProfilesApi = ()=>{
       const selectedCollection= collection(getFirestore(), "users/"+user.uid+"/myProfiles")
@@ -70,9 +67,45 @@ const MyProfiles=({route,navigation})=>{
           console.log('There has been a problem with your fetch operation: ' + error.message);
         })
     }
+
+
+
+    // useEffect(() => {
+    //   const backAction = () => {
+    //     // Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+    //     //   {
+    //     //     text: 'Cancel',
+    //     //     onPress: () => null,
+    //     //     style: 'cancel',
+    //     //   },
+    //     //   {text: 'YES', onPress: () => BackHandler.exitApp()},
+    //     // ]);
+    //     BackHandler.exitApp()
+    //     return true;
+    //   };
+    //   const backHandler = BackHandler.addEventListener(
+    //     'hardwareBackPress',
+    //     backAction,
+    //   );
+  
+    //   return () => backHandler.remove();
+    // }, []);
+
+
+    const unsubscribe = navigation.addListener('beforeRemove', e => {
+      if(navigation.getState().index==2){
+        BackHandler.exitApp()
+        e.preventDefault();
+      }
+      
+      
+      
+      // unsubscribe anula la navegacion volver
+    });
     useEffect(() => {
+      unsubscribe()
       getProfilesApi()
-    },[])
+    },[navigation])
 
     const [hasProfile,setHasProfile]= useState([1])
     //limitando los perfiles a crear
@@ -125,7 +158,7 @@ const MyProfiles=({route,navigation})=>{
                 
                 <TouchableOpacity
                     onPress={() => {
-                        changedProfile(item.uidEntry)
+                        changedProfile(item.uidEntry,item)
                         navigation.navigate("MenuPrincipal")
                     }}>
                     <LinearGradient 

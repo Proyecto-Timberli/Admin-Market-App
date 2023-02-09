@@ -39,7 +39,7 @@ const LoadingScreen =  ({route,navigation,})=> {
     useEffect(() => {
         console.log("Loading...")
         if (route.params){
-            setTimeout(()=>{navigation.navigate(destiny)},4000)
+            setTimeout(()=>{navigation.navigate(destiny)},2000)
         }
     },[])
    

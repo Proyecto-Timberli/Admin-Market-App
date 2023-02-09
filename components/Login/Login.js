@@ -83,6 +83,9 @@ function Login({navigation}){
  
 
   console.log("------------------------")
+  // if (user){
+  //   return navigation.navigate("LoadingScreen",{destiny:"MyProfiles"})
+  // }
     return (
         <View style={styles.container}> 
             <SvgComponent style={styles.containerSVG}/>

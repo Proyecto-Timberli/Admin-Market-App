@@ -85,13 +85,17 @@ function Modal({dato, state, setState, stateModal}){
   )
 }
 function Editar({dato, setState, stateModal }){
+  /////////////////////////////////////////////////
+  const {userPermissions} = useAuth()
+  /////////////////////////////////////////////////
   const edit = ()=>{
     setState(dato)
     stateModal(true)
   }
   return (
-    <TouchableOpacity
-      onPress={()=> edit()}>
+    <>{userPermissions.modifyProducts?
+      <TouchableOpacity
+        onPress={()=> edit()}>
       <Icon  
           size={25}
           colors={[
@@ -99,7 +103,9 @@ function Editar({dato, setState, stateModal }){
             {color:"#25EADE",offset:"1",opacity:"1"},
           ]}
           name="pencil" type="material-community" /> 
-    </TouchableOpacity>
+    </TouchableOpacity>:null}
+    </>
+      
     
   )
 }
@@ -107,7 +113,7 @@ function Editar({dato, setState, stateModal }){
 export default function InformacionProducto({navigation,route}) {
   console.log("------------------------")
   console.log("InformacionProducto")
-  const {userProfile} = useAuth()
+  const {userProfile,userPermissions} = useAuth()
   const {barCode, buyprice, category, description,id,image, make, name, price, stock} = route.params
   /////////////////////////////////////////////////
   const[editable,setEditable]= useState({
@@ -157,6 +163,11 @@ export default function InformacionProducto({navigation,route}) {
       barCode:code
     })
   }
+  //////////////////////////////////////////////////////////
+  //hacer global
+  function financial(x) {
+    return Number.parseFloat(x).toFixed(2);
+  }
   console.log("------------------------")
   return (
         <LinearGradient 
@@ -186,7 +197,7 @@ export default function InformacionProducto({navigation,route}) {
               start={{x:1,y:0}}
               end={{x:0,y:1}}
               style={styles.cotainerIcon}>    
-              <Text style = {styles.text}> Precio: {editable.price}</Text>
+              <Text style = {styles.text}> Precio: {editable.price?financial((editable.price)):null}</Text>
               <Editar dato={"price"} setState={setDato} stateModal={setModal}/>
               </LinearGradient>
             
@@ -217,14 +228,14 @@ export default function InformacionProducto({navigation,route}) {
               <Editar dato={"make"}setState={setDato} stateModal={setModal}/>
             </LinearGradient>
             
-            <LinearGradient 
+            {userPermissions.modifyProducts?<LinearGradient 
               colors={[ '#F8E9E9','#B9C7CA']}
               start={{x:1,y:0}}
               end={{x:0,y:1}}
               style={styles.cotainerIcon}> 
-              <Text style = {styles.text}> Precio de compra: {editable.buyprice} </Text>
+              <Text style = {styles.text}> Precio de compra: {editable.buyprice?financial((editable.buyprice)):null} </Text>
               <Editar dato={"buyprice"}setState={setDato} stateModal={setModal}/>
-            </LinearGradient>
+            </LinearGradient>:null}
             
             <LinearGradient 
               colors={colorA}
@@ -232,7 +243,7 @@ export default function InformacionProducto({navigation,route}) {
               end={{x:0,y:1}}
               style={styles.cotainerIcon}> 
               <Text style = {{...styles.text,width:width*0.7}}> Codigo: {editable.barCode} </Text>
-              <TouchableOpacity onPress={()=>{setScannOn(true)}}><BarCodeIcon size={30}/></TouchableOpacity>
+              {userPermissions.modifyProducts?<TouchableOpacity onPress={()=>{setScannOn(true)}}><BarCodeIcon size={30}/></TouchableOpacity>:null}
               <Editar dato={"barCode"}setState={setDato} stateModal={setModal}/> 
             </LinearGradient>
             
@@ -254,7 +265,7 @@ export default function InformacionProducto({navigation,route}) {
               <Editar dato={"imagen"}setState={setDato} stateModal={setModal}/>
             </LinearGradient>
             <View style = {styles.containerNavBar}>   
-            <TouchableOpacity style={styles.buttom} onPress={()=>eliminar()}>
+            {userPermissions.modifyProducts?<TouchableOpacity style={styles.buttom} onPress={()=>eliminar()}>
                 <Icon  
                     size={iconSize}
                     colors={[
@@ -263,7 +274,7 @@ export default function InformacionProducto({navigation,route}) {
                     ]}
                     name="delete-forever" type="material-community" />  
                     <Text style={styles.textNavBar}>Eliminar</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>:<TouchableOpacity style={styles.buttom}></TouchableOpacity>}
             <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
                 <Icon  
                     size={iconSize}
@@ -274,7 +285,7 @@ export default function InformacionProducto({navigation,route}) {
                     name="home" type="material-community" />  
                     <Text style={styles.textNavBar}>Home</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttom} onPress={()=>guardar()}>
+            {userPermissions.modifyProducts?<TouchableOpacity style={styles.buttom} onPress={()=>guardar()}>
                 <Icon  
                     size={iconSize}
                     colors={[
@@ -283,7 +294,7 @@ export default function InformacionProducto({navigation,route}) {
                     ]}
                     name="content-save" type="material-community" />  
                     <Text style={styles.textNavBar} >Guardar</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>:<TouchableOpacity style={styles.buttom}></TouchableOpacity>}
             </View>
             
       </View>

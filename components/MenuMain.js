@@ -38,6 +38,10 @@ import ConfigProfile from './Cuenta/ConfigProfile'
 import UserSelection from './Cuenta/UserSelection'
 import LoadingScreen from './Reutilizables/LoadingScren'
 
+
+
+
+
 const {width, height} = Dimensions.get('window');
 const Stack = createNativeStackNavigator();
 const iconSize= 100;
@@ -126,6 +130,7 @@ function MenuPrincipal(){
 
 }
 export default function MenuMain(){
+   
     
     return( 
         <NavigationContainer>  
@@ -160,6 +165,9 @@ export default function MenuMain(){
                 <Stack.Screen
                 name="MyProfiles"
                 component={MyProfiles}
+                options={{
+                    headerLeft: (props) => (
+                     console.log("hola"))}}
                 />
                  <Stack.Screen
                 name="MyAcount"

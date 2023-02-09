@@ -17,7 +17,7 @@ const Loading =()=>{
 const Providers= ({navigation}) => {
   console.log("------------------------")
   console.log("Providers")
-  const {userProfile} = useAuth()
+  const {userProfile,userPermissions} = useAuth()
   const [providersApi,setProvidersApi]= useState(null)
   const peticion =  ()=>{
     const selectedC = collection(getFirestore(), "users/"+userProfile+"/providers")
@@ -79,7 +79,7 @@ const Providers= ({navigation}) => {
             value={filterBySearch}
             placeholder="Buscar provedor..."
             />
-            <TouchableOpacity onPress={()=>navigation.navigate("Add-providers")}>
+            {userPermissions.modifyProviders?<TouchableOpacity onPress={()=>navigation.navigate("Add-providers")}>
             <LinearGradient 
               colors={['#206593','#25EADE']}
               start={{x:1,y:0}}
@@ -87,7 +87,7 @@ const Providers= ({navigation}) => {
               style={styles.button}> 
               <Text style = {styles.textButton}>Agregar provedor</Text>
             </LinearGradient>
-            </TouchableOpacity>
+            </TouchableOpacity>:null}
             <View style={{
               marginVertical:10,
               paddingHorizontal:10,

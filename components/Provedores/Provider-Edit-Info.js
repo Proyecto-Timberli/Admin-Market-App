@@ -82,12 +82,14 @@ function Modal({dato, state, setState, stateModal}){
   )
 }
 function Editar({dato, setState, stateModal }){
+  const {userPermissions} = useAuth() 
   const edit = ()=>{
     setState(dato)
     console.log("edit "+ dato)
     stateModal(true)
   }
   return (
+    <>{userPermissions.modifyProviders?
     <TouchableOpacity
       onPress={()=> edit()}>
       <Icon  
@@ -97,7 +99,9 @@ function Editar({dato, setState, stateModal }){
             {color:"#25EADE",offset:"1",opacity:"1"},
           ]}
           name="pencil" type="material-community" /> 
-    </TouchableOpacity>
+    </TouchableOpacity>:null}
+    
+    </>
     
   )
 }
@@ -106,6 +110,7 @@ export default function InformationProvider({navigation,route}) {
   console.log("------------------------")
   console.log("InformationProvider")
   const {userProfile} = useAuth()
+  const {userPermissions} = useAuth() 
   const {id, identifier, phone, location} = route.params
   /////////////////////////////////////////////////
   const[editable,setEditable]= useState({
@@ -199,7 +204,7 @@ export default function InformationProvider({navigation,route}) {
             
           
             <View style = {styles.containerNavBar}>   
-            <TouchableOpacity  onPress={()=>eliminar()}>
+            {userPermissions.modifyProviders?<TouchableOpacity  onPress={()=>eliminar()}>
                 <Icon  
                     size={iconSize}
                     colors={[
@@ -208,7 +213,7 @@ export default function InformationProvider({navigation,route}) {
                     ]}
                     name="delete-forever" type="material-community" />  
                     <Text style={styles.textNavBar}>Eliminar</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>:null}
             <TouchableOpacity  onPress={() => navigation.navigate("MenuPrincipal")}>
                 <Icon  
                     size={iconSize}
@@ -219,7 +224,7 @@ export default function InformationProvider({navigation,route}) {
                     name="home" type="material-community" />  
                     <Text style={styles.textNavBar}>Home</Text>
             </TouchableOpacity>
-            <TouchableOpacity  onPress={()=>guardar()}>
+            {userPermissions.modifyProviders?<TouchableOpacity  onPress={()=>guardar()}>
                 <Icon  
                     size={iconSize}
                     colors={[
@@ -228,7 +233,7 @@ export default function InformationProvider({navigation,route}) {
                     ]}
                     name="content-save" type="material-community" />  
                     <Text style={styles.textNavBar} >Guardar</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>:null}
             </View>
             
       </View>

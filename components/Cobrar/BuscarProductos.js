@@ -89,6 +89,11 @@ export default function BucarProductos({ route, navigation }){
       merge: true,
     });}
    /////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////
+  //hacer global
+  function financial(x) {
+    return Number.parseFloat(x).toFixed(2);
+  }
    console.log("------------------------")
    /////////////////////////////////////////////////////
     return(
@@ -118,7 +123,7 @@ export default function BucarProductos({ route, navigation }){
                                 id={item.id}
                                 nombre={item.name}
                                 categoria={item.category?item.category:null}
-                                precio={item.price}
+                                precio={item.price?financial(item.price):null}
                                 product={item}
                                 onPress={addToCart}
                             />
