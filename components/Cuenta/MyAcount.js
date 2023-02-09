@@ -2,7 +2,7 @@ import {useEffect} from 'react'
 import {useAuth} from '../../context/authContext'
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import { Icon } from 'react-native-gradient-icon';
-import QrGenerator from '../../functions/QrGenerator'
+// import QrGenerator from '../../functions/QrGenerator'
 import * as Sharing from 'expo-sharing';
 import * as Clipboard from 'expo-clipboard';
 const copyToClipboard = async (value) => {
@@ -91,7 +91,7 @@ const MyAcount=({navigation})=>{
                 </View>
 
                 <View style={styles.buttonContainer}>
-                    <QrGenerator value={user.uid} size={170}/>
+                    {/* <QrGenerator value={user.uid} size={170}/> */}
                 </View>
 
 

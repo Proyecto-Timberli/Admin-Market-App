@@ -1,9 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet} from "react-native";
 import MenuMain from './components/MenuMain'
 
-import AsyncStorage from "@react-native-async-storage/async-storage"
 
-// import AppPractice from './components/Login/Practice/appPracrtce'
 export default function App() {
   return ( 
     <MenuMain/> 
