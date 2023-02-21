@@ -86,6 +86,7 @@ const MyAcount=({navigation})=>{
 }
 const styles = StyleSheet.create({
     container:{
+        marginTop:-35,
         width:width,
         height:height,
         flex:1,  

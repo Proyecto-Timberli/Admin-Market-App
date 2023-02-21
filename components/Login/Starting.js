@@ -74,6 +74,7 @@ const Starting =  ({navigation})=> {
 }
 const styles= StyleSheet.create({
     container:{
+        marginTop:-35,
         flex:1,
         alignItems:"center",
         backgroundColor:"#f1f1f1",
@@ -84,6 +85,7 @@ const styles= StyleSheet.create({
         width:width,
     },
     title:{
+        marginTop:height/5,
         fontSize:80,
         color:"#000",
         fontWeight: "bold",

@@ -194,7 +194,7 @@ const ConfigProfile = ({navigation})=>{
                 </View>
                 }
             </View> 
-            <View style={styles.buttonContainer}>
+            <View style={{marginTop:25,}}>
                 <ButtonNav 
                     functionNav={()=>completedProfile()}
                     iconSelect={"content-save-check"}
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
       flex:1,
       alignItems:"center",
     },
-
+    
     containerOption: {
         width: width*0.7,
         backgroundColor: '#fff',

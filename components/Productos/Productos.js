@@ -188,6 +188,7 @@ const Productos = ({navigation}) => {
 };
 const styles = StyleSheet.create({
   container:{
+    marginTop:-35,
     flex:1,
     alignItems:"center",
   },

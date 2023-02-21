@@ -121,17 +121,10 @@ const MyBusiness=({route,navigation})=>{
         <View style={styles.container}>
             {active&&<ModalEditar dato={dato} state={business}setState={setBusiness}setActive={setActive}checkOk={postMyBusiness}/>}
             <View style={{...styles.buttonContainer,width:width,height:height/2}}>
-                <TouchableOpacity 
-                >
-                    <Icon  
-                        size={iconSize}
-                        colors={[
-                            {color:"#206593",offset:"0",opacity:"1"},
-                            {color:"#25EADE",offset:"1",opacity:"1"},
-                        ]}
-                        name="storefront" type="material-community" />  
-                </TouchableOpacity>
-                <View style={styles.cotainerIcon}>
+                <ButtonNav 
+                  iconSelect={"storefront"}
+                  buttonSize={100}/>
+            <View style={{...styles.cotainerIcon,marginTop:25}}>
                     <Text style={styles.text}>Negocio: {business.negocio}</Text>
                     <Editar 
                         dato={"negocio"}
@@ -208,6 +201,7 @@ const MyBusiness=({route,navigation})=>{
 }
 const styles = StyleSheet.create({
     container:{
+      marginTop:-35,
         height:height,
         width:width,
         flex:1,  
@@ -218,6 +212,8 @@ const styles = StyleSheet.create({
         height: height/6,
     },
     buttonContainer:{
+        marginTop:40,
+        marginBottom:25,
         width: width/2,
         height: height/3,
         alignItems:"center",

@@ -169,7 +169,7 @@ export default function NuevaCategoria({navigation}){
 };
 const styles = StyleSheet.create({
   container:{
-    marginTop:25,
+    marginTop:-15,
     flex:1,
     width:width, height:height,
     alignItems:"center",

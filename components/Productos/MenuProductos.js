@@ -52,6 +52,7 @@ export default function MenuProductos({navigation}){
 }
 const styles = StyleSheet.create({
     container:{
+        marginTop:-35,
         width:width,
         flex:1,  
         flexWrap:'wrap',

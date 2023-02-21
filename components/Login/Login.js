@@ -104,6 +104,7 @@ function Login({navigation}){
 
 const styles= StyleSheet.create({
     container:{
+        marginTop:-35,
         flex:1,
         alignItems:"center",
         backgroundColor:"#f1f1f1",
