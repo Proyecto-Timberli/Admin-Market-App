@@ -18,7 +18,7 @@ import BucarProductos from './Cobrar/BuscarProductos'
 import Ventas from './Cobrar/Ventas'
 import VentaResumen from './Cobrar/VentaResumen'
 //-----------------------cuenta------------------------------------
-
+import ButtonNav from './Reutilizables/ButtonNav';
 // Components
 import Register from "./Login/Register";
 import Login from "./Login/Login";
@@ -53,76 +53,46 @@ function MenuPrincipal(){
     return(
         <View style={styles.container}>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuProductos")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="storefront" type="material-community" />  
-                    <Text style={styles.text}>Productos</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>navigation.navigate("MenuProductos")}
+                iconSelect={"storefront"}
+                buttonSize={100}
+                buttonName={"Productos"}/>
             </View>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuCobrar")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="cash-register" type="material-community" />  
-                    <Text style={styles.text}>Cobrar</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>navigation.navigate("MenuCobrar")}
+                iconSelect={"cash-register"}
+                buttonSize={100}
+                buttonName={"Cobrar"}/>
             </View>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Ventas")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="format-list-bulleted-square" type="material-community" />  
-                    <Text style={styles.text}>Ventas</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>navigation.navigate("Ventas")}
+                iconSelect={"format-list-bulleted-square"}
+                buttonSize={100}
+                buttonName={"Ventas"}/>
             </View>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Customers")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="account-group" type="material-community" />  
-                    <Text style={styles.text}>Clientes</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>navigation.navigate("Customers")}
+                iconSelect={"account-group"}
+                buttonSize={100}
+                buttonName={"Clientes"}/>
             </View>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Providers")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="account-group" type="material-community" />  
-                    <Text style={styles.text}>Provedores</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>navigation.navigate("Providers")}
+                iconSelect={"account-group"}
+                buttonSize={100}
+                buttonName={"Provedores"}/>
             </View>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Cuenta")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="account" type="material-community" />  
-                    <Text style={styles.text}>Cuenta</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>navigation.navigate("Cuenta")}
+                iconSelect={"account"}
+                buttonSize={100}
+                buttonName={"Cuenta"}/>
             </View>
             
         </View>

@@ -6,7 +6,7 @@ import {getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc, addDo
 import {postFirestoreId} from '../../functions/apiFunctions'
 const {width, height} = Dimensions.get('window');
 const iconSize= 100;
-
+import ButtonNav from '../Reutilizables/ButtonNav'
 
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
@@ -26,13 +26,7 @@ function Editar({dato,setDato,setActive}){
   return (
     <TouchableOpacity
       onPress={()=> handleChange()}>
-      <Icon  
-          size={25}
-          colors={[
-            {color:"#206593",offset:"0",opacity:"1"},
-            {color:"#25EADE",offset:"1",opacity:"1"},
-          ]}
-          name="pencil" type="material-community" /> 
+      <Icons name="pencil" size={25} color="black" />
     </TouchableOpacity>
     
   )
@@ -183,36 +177,28 @@ const MyBusiness=({route,navigation})=>{
                         
                     />
                 </View>
-                {(apiDoc?.myBusiness!==business)&&<TouchableOpacity
-                  onPress={()=>save()}
-                  style={{flexDirection:"row"}}
-                >
-                  <Icon  
-                      size={30}
-                      colors={[
-                          {color:"#206593",offset:"0",opacity:"1"},
-                          {color:"#25EADE",offset:"1",opacity:"1"},
-                      ]}
-                      name="content-save" type="material-community" /> 
-                      <Text
-                      style={{marginTop:5}}
-                      >Guardar Cambios</Text>
+                {(apiDoc?.myBusiness!==business)&&
+                <TouchableOpacity
+                    onPress={()=>save()}
+                    style={{flexDirection:"row"}}
+                  >
+                  <ButtonNav 
+                    iconSelect={"content-save"}
+                    buttonSize={30}/>
+                  <Text
+                    style={{marginTop:5}}
+                    >Guardar Cambios</Text>
                 </TouchableOpacity>}
                 
             </View>
        
         
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={()=> navigation.navigate("Link-Profile-To-User")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="link-variant-plus" type="material-community" />  
-                    <Text style={{textAlign:"center",}}>Vincular Usuario</Text>
-            </TouchableOpacity>
+              <ButtonNav 
+                functionNav={()=>navigation.navigate("Link-Profile-To-User")}
+                iconSelect={"link-variant-plus"}
+                buttonSize={100}
+                buttonName={"Vincular Usuario"}/>
             </View>
        
            

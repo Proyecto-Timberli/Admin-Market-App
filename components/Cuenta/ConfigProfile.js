@@ -11,7 +11,7 @@ import Loading from '../../functions/Loading'
 import { Icon } from 'react-native-gradient-icon';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import ButtonNav from '../Reutilizables/ButtonNav'
 
 ////////////////////Colors//////////////////////////
 const iconSize= 50;
@@ -195,16 +195,11 @@ const ConfigProfile = ({navigation})=>{
                 }
             </View> 
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={()=>completedProfile()}>
-                <Icon  
-                    size={100}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="content-save-check" type="material-community" />  
-                    <Text style={{textAlign:"center",}}>Crear Profile</Text>
-            </TouchableOpacity>
+                <ButtonNav 
+                    functionNav={()=>completedProfile()}
+                    iconSelect={"content-save-check"}
+                    buttonSize={100}
+                    buttonName={"Crear Profile"}/>
             </View>
             
         

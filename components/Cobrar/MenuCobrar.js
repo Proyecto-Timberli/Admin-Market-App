@@ -27,6 +27,7 @@ const iconColorA="#206593"
 const iconColorB="#25EADE"
 ////////////////////////////////////////////////////
 import CardProducto from './Card-Product-In-Cart'
+import ButtonNav from '../Reutilizables/ButtonNav'
 
 
 
@@ -299,36 +300,21 @@ export default function MenuCobrar({route,navigation}){
             </View>
             {/* NavBar() -------------------------------------------*/}
                     <View style = {styles.containerNavBar}>   
-                            <TouchableOpacity style={styles.buttom} onPress={() => setModalCancelar(true)}>
-                                <Icon  
-                                    size={iconSize}
-                                    colors={[
-                                        {color:iconColorA,offset:"0",opacity:"1"},
-                                        {color:iconColorB,offset:"1",opacity:"1"},
-                                    ]}
-                                    name="autorenew" type="material-community" />  
-                                    <Text style={styles.textNavBar}>Limpiar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
-                                <Icon  
-                                    size={iconSize}
-                                    colors={[
-                                        {color:iconColorA,offset:"0",opacity:"1"},
-                                        {color:iconColorB,offset:"1",opacity:"1"},
-                                    ]}
-                                    name="home" type="material-community" />  
-                                    <Text style={styles.textNavBar}>Home</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttom} onPress={()=> setModalRegistrar(true)}>
-                                <Icon  
-                                    size={iconSize}
-                                    colors={[
-                                        {color:iconColorA,offset:"0",opacity:"1"},
-                                        {color:iconColorB,offset:"1",opacity:"1"},
-                                    ]}
-                                    name="cash-register" type="material-community" />  
-                                    <Text style={styles.textNavBar} >Registrar</Text>
-                            </TouchableOpacity>
+                            <ButtonNav 
+                                functionNav={() => setModalCancelar(true)}
+                                iconSelect={"autorenew"}
+                                buttonSize={30}
+                                buttonName={"Limpiar"}/>
+                            <ButtonNav 
+                                functionNav={()=>navigation.navigate("MenuPrincipal")}
+                                iconSelect={"home"}
+                                buttonSize={30}
+                                buttonName={"Home"}/>
+                            <ButtonNav 
+                                functionNav={()=> setModalRegistrar(true)}
+                                iconSelect={"cash-register"}
+                                buttonSize={30}
+                                buttonName={"Registrar"}/>
                     </View> 
                </View>  
         </LinearGradient>

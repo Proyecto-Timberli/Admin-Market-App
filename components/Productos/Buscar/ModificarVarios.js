@@ -10,6 +10,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
 const {width, height} = Dimensions.get('window');
+import ButtonNav from '../../Reutilizables/ButtonNav'
 ////////////////////Colors//////////////////////////
 const iconSize= 50;
 const colorA = [ '#F8E9E9','#B9C7CA'] 
@@ -196,36 +197,21 @@ export default function ModificarVarios({estado,listaSeleccionados,setListaSelec
                         </TouchableOpacity>
                         {/* NavBar() -------------------------------------------*/}
                         <View style = {styles.containerNavBar}>   
-                            <TouchableOpacity style={styles.buttom} onPress={()=>salir()}>
-                                <Icon  
-                                    size={iconSize}
-                                    colors={[
-                                        {color:iconColorA,offset:"0",opacity:"1"},
-                                        {color:iconColorB,offset:"1",opacity:"1"},
-                                    ]}
-                                    name="delete-forever" type="material-community" />  
-                                    <Text style={styles.textNavBar}>Salir</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
-                                <Icon  
-                                    size={iconSize}
-                                    colors={[
-                                        {color:iconColorA,offset:"0",opacity:"1"},
-                                        {color:iconColorB,offset:"1",opacity:"1"},
-                                    ]}
-                                    name="home" type="material-community" />  
-                                    <Text style={styles.textNavBar}>Home</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttom} onPress={()=>guardar()}>
-                                <Icon  
-                                    size={iconSize}
-                                    colors={[
-                                        {color:iconColorA,offset:"0",opacity:"1"},
-                                        {color:iconColorB,offset:"1",opacity:"1"},
-                                    ]}
-                                    name="content-save" type="material-community" />  
-                                    <Text style={styles.textNavBar} >Guardar</Text>
-                            </TouchableOpacity>
+                            <ButtonNav 
+                                functionNav={()=>salir()}
+                                iconSelect={"delete-forever"}
+                                buttonSize={30}
+                                buttonName={"Salir"}/>
+                            <ButtonNav 
+                                functionNav={()=>navigation.navigate("MenuPrincipal")}
+                                iconSelect={"home"}
+                                buttonSize={30}
+                                buttonName={"Home"}/>
+                            <ButtonNav 
+                                functionNav={()=>guardar()}
+                                iconSelect={"content-save"}
+                                buttonSize={30}
+                                buttonName={"Guardar"}/>
                         </View>                  
                     </View>
                 </SafeAreaView>

@@ -2,6 +2,10 @@ import {useEffect} from 'react'
 import {useAuth} from '../../context/authContext'
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import { Icon } from 'react-native-gradient-icon';
+
+import ButtonNav from '../Reutilizables/ButtonNav'
+
+
 const {width, height} = Dimensions.get('window');
 const iconSize= 100;
 const Cuenta=({navigation})=>{
@@ -32,68 +36,40 @@ const Cuenta=({navigation})=>{
         <View style={styles.container}>
        
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={()=> navigation.navigate("MyAcount")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="account-box" type="material-community" />  
-                    <Text style={styles.text}>Mi cuenta</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>navigation.navigate("MyAcount")}
+                iconSelect={"account-box"}
+                buttonSize={100}
+                buttonName={"Mi cuenta"}/>
             </View>
          
-                     <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={()=> navigation.navigate("MyBusiness")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="storefront" type="material-community" />  
-                    <Text style={styles.text}>Mi Negocio</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+            <ButtonNav 
+                functionNav={()=>navigation.navigate("MyBusiness")}
+                iconSelect={"storefront"}
+                buttonSize={100}
+                buttonName={"Mi Negocio"}/>
             </View>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={()=> navigation.navigate("MyProfiles")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="account-convert" type="material-community" />  
-                    <Text style={styles.text}>Mis Perfiles</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>navigation.navigate("MyProfiles")}
+                iconSelect={"account-convert"}
+                buttonSize={100}
+                buttonName={"Mis Perfiles"}/>
             </View>
   
-            {/* <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom}>
-            </TouchableOpacity>
-            </View> */}
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom}>
-            </TouchableOpacity>
             </View>
             
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom}>
-            </TouchableOpacity>
             </View>
        
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={()=> handleLogout()}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="logout" type="material-community" />  
-                    <Text style={styles.text}>Logout</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>handleLogout()}
+                iconSelect={"logout"}
+                buttonSize={100}
+                buttonName={"Logout"}/>
             </View>
         </View>
     );

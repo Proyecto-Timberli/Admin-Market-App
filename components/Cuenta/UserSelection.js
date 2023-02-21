@@ -11,6 +11,7 @@ import Loading from '../../functions/Loading'
 import { Icon } from 'react-native-gradient-icon';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
+import ButtonNav from '../Reutilizables/ButtonNav'
 
 
 ////////////////////Colors//////////////////////////
@@ -61,16 +62,11 @@ const UserSelection = ({navigation})=>{
                 </LinearGradient>
             </TouchableOpacity>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={()=>setBarCodeActive(true)}>
-                <Icon  
-                    size={100}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="qrcode-scan" type="material-community" />  
-                    <Text style={{textAlign:"center",}}>Escanea el QR</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>setBarCodeActive(true)}
+                iconSelect={"qrcode-scan"}
+                buttonSize={100}
+                buttonName={"Escanea el QR"}/>
             </View>
           
         </View> }

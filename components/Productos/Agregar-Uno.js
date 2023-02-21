@@ -11,7 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import BarCode from '../BarCode/BarCode'
 import BarCodeIcon from '../BarCode/BarCodeIcon'
-
+import ButtonNav from '../Reutilizables/ButtonNav'
 const {width, height} = Dimensions.get('window');
 ////////////////////Colors//////////////////////////
 const iconSize= 50;
@@ -242,36 +242,21 @@ export default function AgregarUno({navigation}) {
           <Editar dato={"imagen"}setState={setDato} stateModal={setModal}/>
         </LinearGradient>
           <View style = {styles.containerNavBar}>   
-            <TouchableOpacity style={styles.buttom} onPress={()=>salir()}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:iconColorA,offset:"0",opacity:"1"},
-                        {color:iconColorB,offset:"1",opacity:"1"},
-                    ]}
-                    name="delete-forever" type="material-community" />  
-                    <Text style={styles.textNavBar}>Salir</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:iconColorA,offset:"0",opacity:"1"},
-                        {color:iconColorB,offset:"1",opacity:"1"},
-                    ]}
-                    name="home" type="material-community" />  
-                    <Text style={styles.textNavBar}>Home</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttom} onPress={()=>agregar()}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:iconColorA,offset:"0",opacity:"1"},
-                        {color:iconColorB,offset:"1",opacity:"1"},
-                    ]}
-                    name="content-save" type="material-community" />  
-                    <Text style={styles.textNavBar} >Agregar</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>salir()}
+                iconSelect={"delete-forever"}
+                buttonSize={30}
+                buttonName={"Salir"}/>
+            <ButtonNav 
+                functionNav={()=>navigation.navigate("MenuPrincipal")}
+                iconSelect={"home"}
+                buttonSize={30}
+                buttonName={"Home"}/>
+            <ButtonNav 
+                functionNav={()=>agregar()}
+                iconSelect={"content-save"}
+                buttonSize={30}
+                buttonName={"Agregar"}/>
           </View>
       </View>
     </LinearGradient>

@@ -8,7 +8,7 @@ import {putFirestore, deleteFirestore} from '../../functions/apiFunctions'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import ButtonNav from '../Reutilizables/ButtonNav'
 import BarCode from '../BarCode/BarCode'
 import BarCodeIcon from '../BarCode/BarCodeIcon'
 
@@ -93,17 +93,11 @@ function Editar({dato, setState, stateModal }){
     stateModal(true)
   }
   return (
-    <>{userPermissions.modifyProducts?
-      <TouchableOpacity
-        onPress={()=> edit()}>
-      <Icon  
-          size={25}
-          colors={[
-            {color:"#206593",offset:"0",opacity:"1"},
-            {color:"#25EADE",offset:"1",opacity:"1"},
-          ]}
-          name="pencil" type="material-community" /> 
-    </TouchableOpacity>:null}
+    <>
+    {userPermissions.modifyProducts?<TouchableOpacity
+      onPress={()=> edit()}>
+      <Icons name="pencil" size={25} color="black" />
+      </TouchableOpacity>:null}
     </>
       
     
@@ -265,36 +259,25 @@ export default function InformacionProducto({navigation,route}) {
               <Editar dato={"imagen"}setState={setDato} stateModal={setModal}/>
             </LinearGradient>
             <View style = {styles.containerNavBar}>   
-            {userPermissions.modifyProducts?<TouchableOpacity style={styles.buttom} onPress={()=>eliminar()}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="delete-forever" type="material-community" />  
-                    <Text style={styles.textNavBar}>Eliminar</Text>
-            </TouchableOpacity>:<TouchableOpacity style={styles.buttom}></TouchableOpacity>}
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="home" type="material-community" />  
-                    <Text style={styles.textNavBar}>Home</Text>
-            </TouchableOpacity>
-            {userPermissions.modifyProducts?<TouchableOpacity style={styles.buttom} onPress={()=>guardar()}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="content-save" type="material-community" />  
-                    <Text style={styles.textNavBar} >Guardar</Text>
-            </TouchableOpacity>:<TouchableOpacity style={styles.buttom}></TouchableOpacity>}
+            {userPermissions.modifyProducts?
+              <ButtonNav 
+                functionNav={()=>eliminar()}
+                iconSelect={"delete-forever"}
+                buttonSize={30}
+                buttonName={"Eliminar"}/>
+            :<TouchableOpacity style={styles.buttom}></TouchableOpacity>}
+              <ButtonNav 
+                functionNav={()=>navigation.navigate("MenuPrincipal")}
+                iconSelect={"home"}
+                buttonSize={30}
+                buttonName={"Home"}/>
+            {userPermissions.modifyProducts?
+             <ButtonNav 
+                functionNav={()=>guardar()}
+                iconSelect={"content-save"}
+                buttonSize={30}
+                buttonName={"Guardar"}/>
+            :<TouchableOpacity style={styles.buttom}></TouchableOpacity>}
             </View>
             
       </View>

@@ -5,6 +5,10 @@ import { Icon } from 'react-native-gradient-icon';
 // import QrGenerator from '../../functions/QrGenerator'
 import * as Sharing from 'expo-sharing';
 import * as Clipboard from 'expo-clipboard';
+
+import ButtonNav from '../Reutilizables/ButtonNav'
+
+
 const copyToClipboard = async (value) => {
     await Clipboard.setStringAsync(value);
   };
@@ -34,17 +38,9 @@ const MyAcount=({navigation})=>{
     return(
         <View style={styles.container}>
             <View style={{...styles.buttonContainer,width:width}}>
-                <TouchableOpacity style={{ 
-                    width: width/4,
-                }}>
-                    <Icon  
-                        size={iconSize}
-                        colors={[
-                            {color:"#206593",offset:"0",opacity:"1"},
-                            {color:"#25EADE",offset:"1",opacity:"1"},
-                        ]}
-                        name="account-box" type="material-community" />  
-                </TouchableOpacity>
+                <ButtonNav 
+                    iconSelect={"account-box"}
+                    buttonSize={100}/>
                 <Text style={styles.text}>{user.email}</Text>
             </View>
             <View style={styles.container2}>
@@ -59,35 +55,23 @@ const MyAcount=({navigation})=>{
                         width: width/2,
                         flexDirection:"row",
                         justifyContent:"space-around"}}>
-                        <TouchableOpacity onPress ={()=>{copyToClipboard(user.uid)}}>
-                            <Icon  
-                                size={45}
-                                colors={[
-                                    {color:"#206593",offset:"0",opacity:"1"},
-                                    {color:"#25EADE",offset:"1",opacity:"1"},
-                                ]}
-                                name="share" type="material-community" />  
-                                <Text>Compartir</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            onPress ={()=>{copyToClipboard(user.uid)}}>
-                            <Icon  
-                                size={45}
-                                colors={[
-                                    {color:"#206593",offset:"0",opacity:"1"},
-                                    {color:"#25EADE",offset:"1",opacity:"1"},
-                                ]}
-                                name="content-copy" type="material-community" />  
-                                <Text>copiar</Text>
-                        </TouchableOpacity>
+                        <ButtonNav 
+                            functionNav={()=>{copyToClipboard(user.uid)}}
+                            iconSelect={"share"}
+                            buttonSize={30}
+                            buttonName={"Compartir"}/>
+                        <ButtonNav 
+                            functionNav={()=>{copyToClipboard(user.uid)}}
+                            iconSelect={"content-copy"}
+                            buttonSize={30}
+                            buttonName={"Copiar"}/>
+            
                     </View>
                 </View>                   
 
         
 
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.buttom}>
-                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.buttonContainer}>

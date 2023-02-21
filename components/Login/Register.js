@@ -60,7 +60,7 @@ function Register({navigation}){
     };
     return (
         <View style={styles.container}> 
-            <SvgComponent style={styles.containerSVG}/>
+            {/* <SvgComponent style={styles.containerSVG}/> */}
             <Text style={styles.title}>Hola!</Text>
             <Text style={styles.subTitle}>Registra tu cuenta</Text>
             <TextInput value={state.email} style={styles.textInput} placeholder="Ingresa un mail" onChangeText={(value) => handleChangeText(value, "email")}></TextInput>
@@ -87,6 +87,7 @@ const styles= StyleSheet.create({
         width:width,
     },
     title:{
+        marginTop:height/5,
         fontSize:80,
         color:"#000",
         fontWeight: "bold",

@@ -9,6 +9,7 @@ import {getFirestore, collection, getDocs, Timestamp} from 'firebase/firestore';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
+import ButtonNav from '../Reutilizables/ButtonNav'
 const {width, height} = Dimensions.get('window');
 ////////////////////Colors//////////////////////////
 const iconSize= 50;
@@ -122,16 +123,11 @@ export default function Ventas({route,navigation}){
             {/* NavBar() -------------------------------------------*/}
             <View style = {styles.containerNavBar}>   
                      
-                        <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
-                                <Icon  
-                                    size={iconSize}
-                                    colors={[
-                                        {color:iconColorA,offset:"0",opacity:"1"},
-                                        {color:iconColorB,offset:"1",opacity:"1"},
-                                    ]}
-                                    name="home" type="material-community" />  
-                                    <Text style={styles.textNavBar}>Home</Text>
-                        </TouchableOpacity>
+            <ButtonNav 
+                                functionNav={()=>navigation.navigate("MenuPrincipal")}
+                                iconSelect={"home"}
+                                buttonSize={30}
+                                buttonName={"Home"}/>
                    
                 </View> 
         </View>   

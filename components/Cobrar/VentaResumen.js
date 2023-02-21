@@ -12,6 +12,9 @@ import { Icon } from 'react-native-gradient-icon';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
+
+import ButtonNav from '../Reutilizables/ButtonNav'
+
 const {width, height} = Dimensions.get('window');
 ////////////////////Colors//////////////////////////
 const iconSize= 50;
@@ -176,36 +179,21 @@ const VentaResumen = ({route,navigation})=>{
             </View>
                    {/* NavBar() -------------------------------------------*/}
                    <View style = {styles.containerNavBar}>   
-                        <TouchableOpacity style={styles.buttom} onPress={() => anular(data)}>
-                                <Icon  
-                                    size={iconSize}
-                                    colors={[
-                                        {color:iconColorA,offset:"0",opacity:"1"},
-                                        {color:iconColorB,offset:"1",opacity:"1"},
-                                    ]}
-                                    name="delete-forever" type="material-community" />  
-                                    <Text style={styles.textNavBar}>Anular</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("MenuPrincipal")}>
-                                <Icon  
-                                    size={iconSize}
-                                    colors={[
-                                        {color:iconColorA,offset:"0",opacity:"1"},
-                                        {color:iconColorB,offset:"1",opacity:"1"},
-                                    ]}
-                                    name="home" type="material-community" />  
-                                    <Text style={styles.textNavBar}>Home</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttom} onPress={Platform.OS === 'ios'?selectPrinter: print}>
-                                <Icon  
-                                    size={iconSize}
-                                    colors={[
-                                        {color:iconColorA,offset:"0",opacity:"1"},
-                                        {color:iconColorB,offset:"1",opacity:"1"},
-                                    ]}
-                                    name="content-save" type="material-community" />  
-                                    <Text style={styles.textNavBar} >Resumen</Text>
-                        </TouchableOpacity>
+                        <ButtonNav 
+                          functionNav={() => anular(data)}
+                          iconSelect={"delete-forever"}
+                          buttonSize={30}
+                          buttonName={"Anular"}/>
+                        <ButtonNav 
+                          functionNav={()=>navigation.navigate("MenuPrincipal")}
+                          iconSelect={"home"}
+                          buttonSize={30}
+                          buttonName={"Home"}/>
+                        <ButtonNav 
+                          functionNav={Platform.OS === 'ios'?selectPrinter: print}
+                          iconSelect={"content-save"}
+                          buttonSize={30}
+                          buttonName={"Resumen"}/>
                 </View> 
             </View>  
             </LinearGradient>

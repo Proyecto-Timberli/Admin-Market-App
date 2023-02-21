@@ -128,24 +128,16 @@ const MyProfiles=({route,navigation})=>{
         }>Perfiles de Negocio</Text>
         {hasProfile.length?null:<TouchableOpacity  onPress={() => setModal(true)}>
                 <LinearGradient 
-                        colors={[ '#F8E9E9','#B9C7CA']}
-                        start={{x:1,y:0}}
-                        end={{x:0,y:1}}
-                        style={styles.cardProfile}>
-                    <Icon  
-                    style={{marginLeft:"30%"}}
-                        size={100}
-                        colors={[
-                            {color:"#000000",offset:"0",opacity:"1"},
-                            {color:"#4E4949",offset:"1",opacity:"1"},
-                        ]}
-                        name="plus-box" type="material-community" 
-                    />  
-                    <Text style={{
-                        fontSize: 16,
-                        fontWeight:"bold",
-                    }}>Crea tu Perfil de Negocio</Text>
-                       
+                  colors={[ '#F8E9E9','#B9C7CA']}
+                  start={{x:1,y:0}}
+                  end={{x:0,y:1}}
+                  style={styles.cardProfile}>
+                  <Icons style={{marginLeft:"30%"}} name="plus-box" size={100} color="black" />
+                  <Text style={{
+                    fontSize: 16,
+                    fontWeight:"bold",
+                    }}>Crea tu Perfil de Negocio
+                  </Text>
                 </LinearGradient>
             </TouchableOpacity>}
         {!myProfilesApi?<Loading/>:

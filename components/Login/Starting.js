@@ -67,7 +67,7 @@ const Starting =  ({navigation})=> {
     console.log("------------------------")
     return (
         <View style={styles.container}> 
-            <SvgComponent style={styles.containerSVG}/>
+            {/* <SvgComponent style={styles.containerSVG}/> */}
             <Loading/>
         </View>
     )

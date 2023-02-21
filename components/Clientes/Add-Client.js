@@ -10,6 +10,7 @@ import {useAuth} from '../../context/authContext'
 import {getFirestore, collection} from 'firebase/firestore';
 import {postFirestore} from '../../functions/apiFunctions'
 ////////////////////////////////////////////////////
+import ButtonNav from '../Reutilizables/ButtonNav'
 const {width, height} = Dimensions.get('window');
 ////////////////////Colors//////////////////////////
 const iconSize= 50;
@@ -89,15 +90,9 @@ function Editar({dato, setState, stateModal }){
   }
   return (
     <TouchableOpacity
-      onPress={()=> edit()}>
-      <Icon  
-          size={25}
-          colors={[
-            {color:"#206593",offset:"0",opacity:"1"},
-            {color:"#25EADE",offset:"1",opacity:"1"},
-          ]}
-          name="pencil" type="material-community" /> 
-    </TouchableOpacity>
+    onPress={()=> edit()}>
+    <Icons name="border-color" size={25} color="black" />
+  </TouchableOpacity>
     
   )
 }
@@ -174,38 +169,22 @@ export default function AddClient({navigation}) {
           
           
             <View style = {styles.containerNavBar}>   
-            <TouchableOpacity  onPress={()=>salir()}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="delete-forever" type="material-community" />  
-                    <Text style={styles.textNavBar}>Salir</Text>
-            </TouchableOpacity>
-            <TouchableOpacity  onPress={() => navigation.navigate("MenuPrincipal")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="home" type="material-community" />  
-                    <Text style={styles.textNavBar}>Home</Text>
-            </TouchableOpacity>
-            <TouchableOpacity  onPress={()=>agregar()}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="content-save" type="material-community" />  
-                    <Text style={styles.textNavBar} >Agregar</Text>
-            </TouchableOpacity>
+              <ButtonNav 
+                  functionNav={()=>salir()}
+                  iconSelect={"delete-forever"}
+                  buttonSize={30}
+                  buttonName={"Salir"}/>
+              <ButtonNav 
+                  functionNav={()=>navigation.navigate("MenuPrincipal")}
+                  iconSelect={"home"}
+                  buttonSize={30}
+                  buttonName={"Home"}/>
+              <ButtonNav 
+                  functionNav={()=>agregar()}
+                  iconSelect={"content-save"}
+                  buttonSize={30}
+                  buttonName={"Agregar"}/>
             </View>
-            
       </View>
       </LinearGradient>
   )

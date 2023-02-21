@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import {useAuth} from '../../context/authContext'
 import {getFirestore, doc} from 'firebase/firestore';
 import {putFirestore, deleteFirestore} from '../../functions/apiFunctions'
+import ButtonNav from '../Reutilizables/ButtonNav'
 ////////////////////////////////////////////////////
 const {width, height} = Dimensions.get('window');
 ////////////////////Colors//////////////////////////
@@ -90,17 +91,10 @@ function Editar({dato, setState, stateModal }){
   }
   return (
     <>{userPermissions.modifyProviders?
-    <TouchableOpacity
+      <TouchableOpacity
       onPress={()=> edit()}>
-      <Icon  
-          size={25}
-          colors={[
-            {color:"#206593",offset:"0",opacity:"1"},
-            {color:"#25EADE",offset:"1",opacity:"1"},
-          ]}
-          name="pencil" type="material-community" /> 
+      <Icons name="border-color" size={25} color="black" />
     </TouchableOpacity>:null}
-    
     </>
     
   )
@@ -202,38 +196,22 @@ export default function InformationProvider({navigation,route}) {
               <Text style = {styles.textButton}>Pedidos de compra</Text>
             </LinearGradient>
             
-          
             <View style = {styles.containerNavBar}>   
-            {userPermissions.modifyProviders?<TouchableOpacity  onPress={()=>eliminar()}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="delete-forever" type="material-community" />  
-                    <Text style={styles.textNavBar}>Eliminar</Text>
-            </TouchableOpacity>:null}
-            <TouchableOpacity  onPress={() => navigation.navigate("MenuPrincipal")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="home" type="material-community" />  
-                    <Text style={styles.textNavBar}>Home</Text>
-            </TouchableOpacity>
-            {userPermissions.modifyProviders?<TouchableOpacity  onPress={()=>guardar()}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="content-save" type="material-community" />  
-                    <Text style={styles.textNavBar} >Guardar</Text>
-            </TouchableOpacity>:null}
+            {userPermissions.modifyProviders?<ButtonNav 
+                  functionNav={()=>eliminar()}
+                  iconSelect={"delete-forever"}
+                  buttonSize={30}
+                  buttonName={"Eliminar"}/>:null}
+              <ButtonNav 
+                  functionNav={()=>navigation.navigate("MenuPrincipal")}
+                  iconSelect={"home"}
+                  buttonSize={30}
+                  buttonName={"Home"}/>
+              {userPermissions.modifyProviders?<ButtonNav 
+                  functionNav={()=>guardar()}
+                  iconSelect={"content-save"}
+                  buttonSize={30}
+                  buttonName={"Guardar"}/>:null}
             </View>
             
       </View>

@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import { Icon } from 'react-native-gradient-icon';
 import {useAuth} from '../../context/authContext'
+import ButtonNav from '../Reutilizables/ButtonNav'
 const {width, height} = Dimensions.get('window');
 const iconSize= 100;
 
@@ -13,40 +14,26 @@ export default function MenuProductos({navigation}){
     return(
         <View style={styles.container}>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Productos")}>
-                <Icon  
-                    size={iconSize}
-                    colors={[
-                        {color:"#206593",offset:"0",opacity:"1"},
-                        {color:"#25EADE",offset:"1",opacity:"1"},
-                    ]}
-                    name="magnify-expand" type="material-community" />  
-                    <Text style={styles.text}>Buscar Producto</Text>
-            </TouchableOpacity>
+            <ButtonNav 
+                functionNav={()=>navigation.navigate("Productos")}
+                iconSelect={"magnify-expand"}
+                buttonSize={100}
+                buttonName={"Buscar Producto"}/>
             </View>
+            
             {userPermissions.modifyProducts?<View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("Categorias")}>
-                    <Icon  
-                        size={iconSize}
-                        colors={[
-                            {color:"#206593",offset:"0",opacity:"1"},
-                            {color:"#25EADE",offset:"1",opacity:"1"},
-                        ]}
-                        name="shape" type="material-community" />  
-                        <Text style={styles.text}>Categorias</Text>
-                </TouchableOpacity>
+                <ButtonNav 
+                    functionNav={()=>navigation.navigate("Categorias")}
+                    iconSelect={"shape"}
+                    buttonSize={100}
+                    buttonName={"Categorias"}/>
             </View>:<View style={styles.buttonContainer}></View>}
             {userPermissions.modifyProducts?<View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.buttom} onPress={() => navigation.navigate("AgregarUno")}>
-                    <Icon  
-                        size={iconSize}
-                        colors={[
-                            {color:"#206593",offset:"0",opacity:"1"},
-                            {color:"#25EADE",offset:"1",opacity:"1"},
-                        ]}
-                        name="plus-box" type="material-community" />  
-                        <Text style={styles.text}>Agregar Producto</Text>
-                </TouchableOpacity>
+                <ButtonNav 
+                    functionNav={()=>navigation.navigate("AgregarUno")}
+                    iconSelect={"plus-box"}
+                    buttonSize={100}
+                    buttonName={"Agregar Producto"}/>
             </View>:<View style={styles.buttonContainer}></View>}
             <View style={styles.buttonContainer}>
             {/* <TouchableOpacity style={styles.buttom} onPress={()=>console.log("varios")}>
