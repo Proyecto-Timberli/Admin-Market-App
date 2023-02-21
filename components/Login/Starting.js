@@ -51,8 +51,8 @@ const Starting =  ({navigation})=> {
         if (user){   postUser()  }
     },[])
     useEffect(() => {
-        if (user){                                
-            if(!state?.identifier){
+        if (state){                                
+            if(!state.identifier){
                 const docRef =doc(getFirestore(),"users/"+user.uid)
                 postFirestoreId(docRef,{identifier:user.email})
                 navigation.navigate("MyProfiles")

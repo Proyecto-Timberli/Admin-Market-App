@@ -88,6 +88,7 @@ const MyBusiness=({route,navigation})=>{
         cbu:"",
         ubicacion:"",
         cuit:"",
+        telefono:"",
     })
 ////////////////////////////////////////////////////
     const getMyBusinessApi = ()=>{
@@ -165,6 +166,15 @@ const MyBusiness=({route,navigation})=>{
                     <Text style={styles.text}>Ubicacion: {business.ubicacion}</Text>
                     <Editar
                         dato={"ubicacion"}
+                        setDato={setDato}
+                        setActive={setActive}
+                        
+                    />
+                </View>
+                <View style={styles.cotainerIcon}>
+                    <Text style={styles.text}>Telefono: {business.telefono}</Text>
+                    <Editar
+                        dato={"telefono"}
                         setDato={setDato}
                         setActive={setActive}
                         

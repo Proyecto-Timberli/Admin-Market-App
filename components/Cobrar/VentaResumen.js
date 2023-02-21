@@ -32,7 +32,14 @@ const VentaResumen = ({route,navigation})=>{
   const {id,resumen,fecha,total,client,idClient,wayToPay}=route.params
   const data = resumen
 /////////////////////////////////////////////////////////
-
+const [businessApi,setBusinessApi] = useState(null)
+const getMyBusinessApi = ()=>{
+  const selectedDoc = doc(getFirestore(), "users/"+userProfile)
+  getDoc(selectedDoc).then(res => setBusinessApi(res.data()))
+}
+useEffect(()=>{
+  getMyBusinessApi()
+},[])
   const deleteSale = ()=>{
     const selected = doc(getFirestore(), "users/"+userProfile+"/sales", id)
     deleteFirestore(selected)
@@ -72,12 +79,14 @@ const VentaResumen = ({route,navigation})=>{
     <div style="display:flex;flex-wrap: wrap;background-color:#F8E9E9;margin-bottom:15px; ">
       <div style="width:59%;height:28%;padding:10px;text-align:left;">
         <p style="text-align:right;">No valido como factura</p>
-        <p>Usuario Empresa</p>
-        <p>Cuil: 88-88888888-8</p>
+        <p>${businessApi?.myBusiness?.negocio?businessApi.myBusiness.negocio:null}</p>
+        <p>${businessApi?.myBusiness?.de?businessApi.myBusiness.de:null}</p>
+        <p>Cuit: ${businessApi?.myBusiness?.cuit?businessApi.myBusiness.cuit:null}</p>
+        <p>Telefono: ${businessApi?.myBusiness?.telefono?businessApi.myBusiness.telefono:"Ninguno"}</p>
         <p>Fecha: ${fecha}</p>
         <p>Nro de venta: ${id}</p>
-        <p>Nro de Cliente: ${idClient}</p>
         <p>Cliente: ${client}</p>
+        <p>Nro de Cliente: ${idClient}</p>
         <p>Forma de pago: ${wayToPay}</p>
       </div>
       <div style="width:35%;height:28%;">
@@ -103,6 +112,7 @@ const VentaResumen = ({route,navigation})=>{
 
   const print = async () => {
     // On iOS/android prints the given html. On web prints the HTML from the current page.
+    // getMyBusinessApi()
     await Print.printAsync({
       html,
       height: 92, 
@@ -242,7 +252,7 @@ const VentaResumen = ({route,navigation})=>{
           } ,
           containerNavBar: {
             position: "absolute",
-            bottom: -20,
+            bottom: 0,
             width: '100%',
             height: 70,
             backgroundColor: '#fff',

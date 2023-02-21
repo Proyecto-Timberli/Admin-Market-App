@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
     } ,
           containerNavBar: {
             position: "absolute",
-            bottom: -20,
+            bottom: 0,
             width: '100%',
             height: 70,
             backgroundColor: '#fff',
